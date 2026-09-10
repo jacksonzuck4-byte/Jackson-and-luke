@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Protocol — Goal-based peptide research matching</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#13161A;
+    --ink-soft:#2A2F35;
+    --paper:#EEEBE2;
+    --paper-dim:#DEDACD;
+    --line: rgba(19,22,26,0.14);
+    --accent:#3E8168;
+    --accent-soft:#D7E6DD;
+    --warn:#B5622A;
+    --warn-soft:#F1DFCB;
+    --mono: 'IBM Plex Mono', monospace;
+    --serif: 'Fraunces', serif;
+    --sans: 'Inter', sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; }
+  body{
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+
+  a { color: inherit; }
+
+  .wrap{
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 24px 120px;
+  }
+
+  .topbar{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 28px 24px 0;
+  }
+  .mark{
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.02em;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .mark::before{
+    content:"";
+    width:8px; height:8px;
+    border-radius:50%;
+    background: var(--accent);
+    display:inline-block;
+  }
+  .step-indicator{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  .hero{ padding: 56px 0 40px; }
+  .hero h1{
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: clamp(34px, 6vw, 52px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    margin: 0 0 20px;
+    max-width: 11ch;
+  }
+  .hero p{
+    font-size: 17px;
+    max-width: 46ch;
+    color: var(--ink-soft);
+    margin: 0 0 32px;
+  }
+  .cta{
+    appearance:none;
+    border:none;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: var(--sans);
+    font-weight: 600;
+    font-size: 15px;
+    padding: 14px 24px;
+    border-radius: 3px;
+    cursor:pointer;
+  }
+  .cta:hover{ background: var(--ink-soft); }
+  .cta:disabled{ opacity: 0.4; cursor: not-allowed; }
+  .cta:focus-visible, button:focus-visible, .choice:focus-visible, textarea:focus-visible, input:focus-visible{
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .cta.ghost{
+    background: transparent;
+    color: var(--ink);
+    border: 1px solid var(--line);
+  }
+  .cta.ghost:hover{ background: var(--paper-dim); }
+
+  .q-label{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--accent);
+    margin-bottom: 10px;
+  }
+  .q-title{
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 500;
+    margin: 0 0 10px;
+    max-width: 22ch;
+  }
+  .q-help{
+    font-size: 14px;
+    color: var(--ink-soft);
+    max-width: 48ch;
+    margin: 0 0 26px;
+  }
+
+  .card{ display:none; }
+  .card.active{ display:block; }
+
+  /* free text goal input */
+  textarea.goal-input{
+    width: 100%;
+    min-height: 110px;
+    resize: vertical;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 16px;
+    font-family: var(--sans);
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .goal-input::placeholder{ color: #9A9587; }
+
+  .analyze-row{
+    display:flex;
+    justify-content: flex-end;
+    margin-top: 14px;
+  }
+
+  .chip-panel{
+    margin-top: 30px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+    display:none;
+  }
+  .chip-panel.visible{ display:block; }
+  .chip-panel .panel-label{
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 14px;
+  }
+  .chip-row{
+    display:flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .chip{
+    font-family: var(--sans);
+    font-size: 13px;
+    padding: 9px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--line);
+    background: #fff;
+    color: var(--ink-soft);
+    cursor: pointer;
+  }
+  .chip.matched{
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--ink);
+  }
+  .chip .tick{ margin-right: 6px; }
+
+  .empty-match-note{
+    font-size: 13px;
+    color: var(--warn);
+    margin-top: 14px;
+    display:none;
+  }
+  .empty-match-note.visible{ display:block; }
+
+  /* multiple choice (experience / activity) */
+  .choices{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    margin-bottom: 36px;
+  }
+  .choice{
+    text-align:left;
+    background: transparent;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 16px 18px;
+    font-family: var(--sans);
+    font-size: 15px;
+    color: var(--ink);
+    cursor:pointer;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap: 12px;
+  }
+  .choice:hover{ border-color: var(--ink-soft); background: var(--paper-dim); }
+  .choice.selected{ border-color: var(--accent); background: var(--accent-soft); }
+  .choice .desc{ font-size: 13px; color: var(--ink-soft); font-weight: 400; margin-top: 4px; }
+  .choice-main{ display:flex; flex-direction:column; }
+  .checkmark{ width: 18px; height:18px; border-radius: 50%; border: 1px solid var(--ink-soft); flex: none; }
+  .choice.selected .checkmark{ border-color: var(--accent); background: var(--accent); }
+
+  /* health form */
+  .field{ margin-bottom: 22px; }
+  .field label{
+    display:block;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .field input[type="text"]{
+    width: 100%;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    padding: 13px 14px;
+    font-family: var(--sans);
+    font-size: 15px;
+    color: var(--ink);
+  }
+  .field input::placeholder{ color: #9A9587; }
+  .field .hint{ font-size: 12px; color: var(--ink-soft); margin-top: 6px; }
+
+  .nav-row{
+    display:flex;
+    justify-content: space-between;
+    align-items:center;
+    margin-top: 8px;
+  }
+  .back-link{
+    font-family: var(--mono);
+    font-size: 13px;
+    background:none;
+    border:none;
+    color: var(--ink-soft);
+    cursor:pointer;
+    padding: 8px 0;
+  }
+  .back-link:hover{ color: var(--ink); }
+
+  /* results */
+  .results-head{ padding: 48px 0 8px; }
+  .results-head .q-label{ margin-bottom: 14px; }
+  .results-head h2{ font-family: var(--serif); font-weight: 500; font-size: 30px; margin: 0 0 12px; }
+  .results-head p{ color: var(--ink-soft); max-width: 50ch; margin: 0 0 8px; }
+
+  .banner{
+    background: var(--warn-soft);
+    border: 1px solid rgba(181,98,42,0.35);
+    border-radius: 3px;
+    padding: 16px 18px;
+    margin: 24px 0 36px;
+    font-size: 14px;
+    color: #6E3D18;
+  }
+  .banner strong{ display:block; font-family: var(--mono); font-size: 12px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px; color: var(--warn); }
+  .banner ul{ margin: 8px 0 0; padding-left: 18px; }
+  .banner li{ margin-bottom: 4px; }
+
+  .goal-group{ margin-bottom: 12px; }
+  .goal-group-title{
+    font-family: var(--mono);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    padding-top: 30px;
+    border-top: 1px solid var(--line);
+  }
+  .goal-group:first-of-type .goal-group-title{ border-top: none; padding-top: 0; }
+
+  .protocol{ padding: 22px 0; border-bottom: 1px solid var(--line); }
+  .protocol-head{ display:flex; justify-content:space-between; align-items:baseline; gap: 16px; margin-bottom: 6px; }
+  .protocol-name{ font-family: var(--serif); font-size: 22px; font-weight: 500; }
+  .evidence{
+    font-family: var(--mono);
+    font-size: 11px;
+    white-space: nowrap;
+    padding: 4px 8px;
+    border-radius: 2px;
+    border: 1px solid var(--line);
+    color: var(--ink-soft);
+  }
+  .evidence.early, .evidence.animal{ border-color: rgba(181,98,42,0.4); color: var(--warn); }
+  .evidence.clinical{ border-color: rgba(62,129,104,0.4); color: var(--accent); }
+
+  .protocol-tag{ font-family: var(--mono); font-size: 12px; color: var(--ink-soft); margin-bottom: 14px; }
+  .protocol p{ margin: 0 0 10px; font-size: 15px; color: var(--ink-soft); }
+  .protocol .meta-row{ display:flex; gap: 22px; margin-top: 14px; flex-wrap: wrap; }
+  .meta-item dt{ font-family: var(--mono); font-size: 11px; color: var(--ink-soft); margin-bottom: 3px; }
+  .meta-item dd{ margin:0; font-size: 13px; }
+
+  .disclaimer-block{
+    margin-top: 44px;
+    padding: 22px;
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 4px;
+  }
+  .disclaimer-block strong{
+    display:block; font-family: var(--mono); font-size: 12px; letter-spacing: 0.03em;
+    text-transform: uppercase; margin-bottom: 10px; color: #8FE3C4;
+  }
+  .disclaimer-block p{ font-size: 14px; color: rgba(238,235,226,0.85); margin: 0 0 10px; }
+  .disclaimer-block p:last-child{ margin-bottom:0; }
+
+  .restart-row{ display:flex; gap: 12px; margin-top: 32px; }
+
+  @media (max-width: 480px){
+    .protocol-head{ flex-direction:column; align-items:flex-start; gap:6px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="mark">PROTOCOL</div>
+  <div class="step-indicator" id="stepIndicator"></div>
+</div>
+
+<div class="wrap">
+
+  <!-- Screen 0: hero -->
+  <section class="card active" id="screen-hero">
+    <div class="hero">
+      <h1>Turn your goal into a research-backed protocol.</h1>
+      <p>Tell us what you're working on in your own words. We'll match it against published research and hand back a starting protocol to review with a provider — not a guess, not a generic stack.</p>
+      <button class="cta" onclick="goTo(1)">Start my match</button>
+    </div>
+  </section>
+
+  <!-- Screen 1: goal (free text + keyword match) -->
+  <section class="card" id="screen-1">
+    <div style="padding-top:40px;">
+      <div class="q-label">01 — Your goal</div>
+      <h2 class="q-title">What are you trying to work on?</h2>
+      <p class="q-help">Describe it however you'd say it out loud. For example: "I keep tweaking my knee and want to recover faster" or "trying to sleep deeper and lose some fat."</p>
+
+      <textarea class="goal-input" id="goalInput" placeholder="Type your goal here..."></textarea>
+
+      <div class="analyze-row">
+        <button class="cta" id="analyzeBtn" onclick="analyzeGoals()">Analyze my goal</button>
+      </div>
+
+      <div class="chip-panel" id="chipPanel">
+        <div class="panel-label">Here's what we picked up — tap to adjust</div>
+        <div class="chip-row" id="chipRow"></div>
+        <div class="empty-match-note" id="emptyMatchNote">We didn't catch a clear match in your text — pick one or more areas below so we can build your protocol.</div>
+      </div>
+
+      <div class="nav-row">
+        <button class="back-link" onclick="goTo(0)">← Back</button>
+        <button class="cta" id="next1" onclick="goTo(2)" disabled>Continue</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screen 2: experience -->
+  <section class="card" id="screen-2">
+    <div style="padding-top:40px;">
+      <div class="q-label">02 — Experience level</div>
+      <h2 class="q-title">Have you used peptides or supplements like this before?</h2>
+      <p class="q-help">This helps us calibrate how much background to give you.</p>
+      <div class="choices" id="expChoices"></div>
+      <div class="nav-row">
+        <button class="back-link" onclick="goTo(1)">← Back</button>
+        <button class="cta" id="next2" onclick="goTo(3)" disabled>Continue</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screen 3: activity level -->
+  <section class="card" id="screen-3">
+    <div style="padding-top:40px;">
+      <div class="q-label">03 — Activity level</div>
+      <h2 class="q-title">How many days a week do you work out?</h2>
+      <p class="q-help">Workout means exerting your body above resting/homeostatic levels — lifting, running, sports, structured training, etc.</p>
+      <div class="choices" id="activityChoices"></div>
+      <div class="nav-row">
+        <button class="back-link" onclick="goTo(2)">← Back</button>
+        <button class="cta" id="next3" onclick="goTo(4)" disabled>Continue</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screen 4: health details -->
+  <section class="card" id="screen-4">
+    <div style="padding-top:40px;">
+      <div class="q-label">04 — Health context</div>
+      <h2 class="q-title">A few things a provider would want to know</h2>
+      <p class="q-help">Answer honestly and in your own words — write "none" if something doesn't apply. This stays with your protocol, not shared anywhere.</p>
+
+      <div class="field">
+        <label for="fieldConditions">Medical conditions</label>
+        <input type="text" id="fieldConditions" placeholder="e.g. none, or type 2 diabetes, thyroid condition...">
+      </div>
+
+      <div class="field">
+        <label for="fieldMeds">Medications you currently take</label>
+        <input type="text" id="fieldMeds" placeholder="e.g. none, or list medication names">
+      </div>
+
+      <div class="field">
+        <label for="fieldPregnant">Pregnant, nursing, or trying to conceive</label>
+        <input type="text" id="fieldPregnant" placeholder="e.g. no / not applicable / yes">
+      </div>
+
+      <div class="field">
+        <label for="fieldDrugs">Recreational or non-prescribed drug use</label>
+        <input type="text" id="fieldDrugs" placeholder="e.g. none">
+      </div>
+
+      <div class="field">
+        <label for="fieldAlcohol">Alcohol consumption</label>
+        <input type="text" id="fieldAlcohol" placeholder="e.g. none, occasional, a few drinks a week">
+      </div>
+
+      <div class="nav-row">
+        <button class="back-link" onclick="goTo(3)">← Back</button>
+        <button class="cta" onclick="showResults()">See my protocol</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screen 5: results -->
+  <section class="card" id="screen-results">
+    <div class="results-head">
+      <div class="q-label">Your match</div>
+      <h2 id="resultsTitle">Protocol suggestion</h2>
+      <p id="resultsSub"></p>
+    </div>
+
+    <div class="banner" id="conditionalBanner" style="display:none;">
+      <strong>Flagged for provider review</strong>
+      <span id="conditionalBannerText"></span>
+      <ul id="conditionalBannerList"></ul>
+    </div>
+
+    <div id="protocolList"></div>
+
+    <div class="disclaimer-block">
+      <strong>Not medical advice</strong>
+      <p>This tool summarizes published and preclinical research to help you have a more informed conversation with a licensed healthcare provider. It does not diagnose, treat, or prescribe, and it is not a substitute for professional medical care.</p>
+      <p>Peptide products vary widely in purity and regulatory status. Sourcing, legality, and appropriate use depend on your location and health history — always confirm with a licensed provider before starting anything, especially anything flagged above.</p>
+    </div>
+
+    <div class="restart-row">
+      <button class="cta ghost" onclick="goTo(1)">Adjust my answers</button>
+      <button class="cta ghost" onclick="restart()">Start over</button>
+    </div>
+  </section>
+
+</div>
+
+<script>
+/* ---------------- data ---------------- */
+
+const GOALS = [
+  {
+    id: "recovery",
+    label: "Tissue repair & recovery",
+    keywords: ["recover","recovery","injury","injured","tendon","ligament","tissue repair","heal","healing","joint pain","sore","sprain","strain","surgery","rehab"],
+    protocols: [
+      {
+        name: "BPC-157",
+        tag: "Gastric pentadecapeptide",
+        evidence: "animal",
+        evidenceLabel: "Mostly animal studies",
+        text: "Studied largely in animal models for its role in tendon, ligament, and gut-lining repair. Human data is limited to small or informal reports, so it's best treated as an early-stage compound rather than an established therapy.",
+        form: "Subcutaneous or oral",
+        cycle: "Provider-set, typically weeks"
+      },
+      {
+        name: "TB-500 (Thymosin Beta-4 fragment)",
+        tag: "Synthetic peptide fragment",
+        evidence: "animal",
+        evidenceLabel: "Mostly animal studies",
+        text: "Investigated for its role in cell migration and tissue regeneration, often discussed alongside BPC-157 for soft-tissue recovery. Clinical trial data in humans is sparse.",
+        form: "Subcutaneous",
+        cycle: "Provider-set"
+      }
+    ]
+  },
+  {
+    id: "performance",
+    label: "Muscle & performance",
+    keywords: ["muscle","strength","performance","athletic","bulk","gain muscle","lean mass","build muscle","power","lifting","strong"],
+    protocols: [
+      {
+        name: "CJC-1295 / Ipamorelin",
+        tag: "Growth-hormone secretagogues",
+        evidence: "early",
+        evidenceLabel: "Early clinical",
+        text: "This combination is designed to stimulate the body's own growth-hormone pulse rather than introducing exogenous HGH. Some clinical work exists on the individual mechanisms, though long-term outcome data specific to performance use is thin.",
+        form: "Subcutaneous",
+        cycle: "Provider-set, often 5 days on / 2 off"
+      },
+      {
+        name: "Sermorelin",
+        tag: "GHRH analogue",
+        evidence: "clinical",
+        evidenceLabel: "Clinical history",
+        text: "One of the more clinically established growth-hormone-releasing peptides, with a longer history of medical use for GH-related deficiency. Off-label performance use is common but not the studied indication.",
+        form: "Subcutaneous",
+        cycle: "Provider-set, nightly protocols typical"
+      }
+    ]
+  },
+  {
+    id: "sleep",
+    label: "Sleep quality",
+    keywords: ["sleep","insomnia","rest","falling asleep","staying asleep","tired","sleep issues","sleep quality"],
+    protocols: [
+      {
+        name: "DSIP (Delta Sleep-Inducing Peptide)",
+        tag: "Neuropeptide",
+        evidence: "animal",
+        evidenceLabel: "Mostly early/animal research",
+        text: "Named for early research into delta-wave sleep, though modern evidence on reliably improving human sleep architecture is inconsistent. Often discussed more for its research history than a strong current evidence base.",
+        form: "Subcutaneous",
+        cycle: "Provider-set"
+      }
+    ]
+  },
+  {
+    id: "cognitive",
+    label: "Cognitive focus",
+    keywords: ["focus","cognitive","memory","mental clarity","concentration","brain fog","mental performance","clarity","attention"],
+    protocols: [
+      {
+        name: "Semax",
+        tag: "ACTH-derived peptide",
+        evidence: "early",
+        evidenceLabel: "Early clinical (ex-Russia)",
+        text: "Developed and studied in Russia, primarily investigated for neuroprotective and cognitive effects. Evidence base outside that research tradition is limited, and regulatory status varies by country.",
+        form: "Intranasal",
+        cycle: "Provider-set"
+      },
+      {
+        name: "Selank",
+        tag: "Tuftsin analogue",
+        evidence: "early",
+        evidenceLabel: "Early clinical (ex-Russia)",
+        text: "Studied mainly for anxiolytic and mood-related effects alongside potential cognitive benefits. Same regional research base and evidence limitations as Semax.",
+        form: "Intranasal",
+        cycle: "Provider-set"
+      }
+    ]
+  },
+  {
+    id: "skin",
+    label: "Skin health",
+    keywords: ["skin","wrinkle","collagen","anti-aging","complexion","acne","skin texture","skin health","fine lines"],
+    protocols: [
+      {
+        name: "GHK-Cu (Copper peptide)",
+        tag: "Copper-binding tripeptide",
+        evidence: "clinical",
+        evidenceLabel: "Clinical (topical/derm)",
+        text: "One of the better-studied peptides in dermatology, with published research on collagen signaling and wound healing, largely in topical form. Injectable use is less studied than topical.",
+        form: "Topical or subcutaneous",
+        cycle: "Provider-set"
+      }
+    ]
+  },
+  {
+    id: "longevity",
+    label: "Longevity",
+    keywords: ["longevity","healthspan","aging","age well","vitality","life span","lifespan","live longer"],
+    protocols: [
+      {
+        name: "Epitalon",
+        tag: "Synthetic tetrapeptide",
+        evidence: "animal",
+        evidenceLabel: "Mostly animal/preclinical",
+        text: "Studied primarily in Russian aging research for effects on telomerase activity and circadian regulation, mostly in animal models. Long-term human longevity outcomes have not been established.",
+        form: "Subcutaneous",
+        cycle: "Provider-set, cyclical courses"
+      },
+      {
+        name: "Thymosin Alpha-1",
+        tag: "Immune-modulating peptide",
+        evidence: "clinical",
+        evidenceLabel: "Approved in some countries",
+        text: "Has an established clinical history for immune support in several countries, including use alongside other treatments. Evidence for general healthspan or anti-aging use specifically is much thinner than for its approved indications.",
+        form: "Subcutaneous",
+        cycle: "Provider-set"
+      }
+    ]
+  },
+  {
+    id: "fatloss",
+    label: "Fat loss",
+    keywords: ["fat loss","weight loss","lose weight","burn fat","body composition","lean out","cutting","fat burning","losing weight"],
+    protocols: [
+      {
+        name: "Tesamorelin",
+        tag: "GHRH analogue",
+        evidence: "clinical",
+        evidenceLabel: "Clinically established",
+        text: "Approved in some countries specifically for reducing visceral fat in a defined clinical population, giving it a stronger evidence base than most peptides on this list. Use outside that approved context is off-label.",
+        form: "Subcutaneous",
+        cycle: "Provider-set, daily"
+      },
+      {
+        name: "AOD-9604",
+        tag: "HGH fragment 176-191",
+        evidence: "animal",
+        evidenceLabel: "Mostly early/animal research",
+        text: "A fragment of growth hormone studied for its potential to influence fat metabolism without the broader effects of full-length HGH. Human trial data on meaningful fat-loss outcomes remains limited.",
+        form: "Subcutaneous",
+        cycle: "Provider-set"
+      }
+    ]
+  }
+];
+
+const EXPERIENCE = [
+  { id: "new", label: "New to this", desc: "Haven't used peptides or supplements like this before" },
+  { id: "some", label: "Some experience", desc: "Tried one or two protocols" },
+  { id: "experienced", label: "Experienced", desc: "Ongoing or repeated use" }
+];
+
+const ACTIVITY = [
+  { id: "none", label: "None", desc: "0 days a week" },
+  { id: "few", label: "A few", desc: "1–2 days a week" },
+  { id: "often", label: "Often", desc: "3–4 days a week" },
+  { id: "lot", label: "A lot", desc: "5+ days a week" }
+];
+
+/* ---------------- state ---------------- */
+
+let state = { goalText: "", goals: [], experience: null, activity: null, health: {} };
+let currentScreen = 0;
+const screenIds = ["screen-hero","screen-1","screen-2","screen-3","screen-4","screen-results"];
+
+/* ---- goal keyword matching ---- */
+
+function analyzeGoals(){
+  const text = document.getElementById("goalInput").value.trim();
+  state.goalText = text;
+  const lower = text.toLowerCase();
+
+  const scored = GOALS.map(g => {
+    const hits = g.keywords.filter(k => lower.includes(k));
+    return { id: g.id, label: g.label, score: hits.length };
+  });
+
+  const matched = scored.filter(g => g.score > 0).sort((a,b) => b.score - a.score).map(g => g.id);
+  state.goals = matched;
+
+  renderChips();
+}
+
+function renderChips(){
+  const panel = document.getElementById("chipPanel");
+  const row = document.getElementById("chipRow");
+  const emptyNote = document.getElementById("emptyMatchNote");
+  panel.classList.add("visible");
+  row.innerHTML = "";
+
+  GOALS.forEach(g => {
+    const chip = document.createElement("button");
+    chip.type = "button";
+    chip.className = "chip" + (state.goals.includes(g.id) ? " matched" : "");
+    chip.innerHTML = (state.goals.includes(g.id) ? '<span class="tick">✓</span>' : '') + g.label;
+    chip.addEventListener("click", () => {
+      if(state.goals.includes(g.id)){
+        state.goals = state.goals.filter(id => id !== g.id);
+      } else {
+        state.goals.push(g.id);
+      }
+      renderChips();
+    });
+    row.appendChild(chip);
+  });
+
+  emptyNote.classList.toggle("visible", state.goals.length === 0);
+  document.getElementById("next1").disabled = state.goals.length === 0;
+}
+
+/* ---- generic single-select renderer (experience / activity) ---- */
+
+function renderChoiceList(container, items, onSelect){
+  container.innerHTML = "";
+  items.forEach(item => {
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.type = "button";
+    btn.innerHTML = `
+      <span class="choice-main">
+        <span>${item.label}</span>
+        ${item.desc ? `<span class="desc">${item.desc}</span>` : ""}
+      </span>
+      <span class="checkmark"></span>
+    `;
+    btn.addEventListener("click", () => {
+      [...container.children].forEach(c => c.classList.remove("selected"));
+      btn.classList.add("selected");
+      onSelect(item.id);
+    });
+    container.appendChild(btn);
+  });
+}
+
+renderChoiceList(document.getElementById("expChoices"), EXPERIENCE, (id) => {
+  state.experience = id;
+  document.getElementById("next2").disabled = false;
+});
+
+renderChoiceList(document.getElementById("activityChoices"), ACTIVITY, (id) => {
+  state.activity = id;
+  document.getElementById("next3").disabled = false;
+});
+
+/* ---------------- navigation ---------------- */
+
+function goTo(n){
+  currentScreen = n;
+  screenIds.forEach((id,i) => {
+    document.getElementById(id).classList.toggle("active", i === n);
+  });
+  const stepMap = {0:"", 1:"Step 1 of 4", 2:"Step 2 of 4", 3:"Step 3 of 4", 4:"Step 4 of 4", 5:"Result"};
+  document.getElementById("stepIndicator").textContent = stepMap[n];
+  window.scrollTo({top:0, behavior: "smooth"});
+}
+
+function restart(){
+  state = { goalText: "", goals: [], experience: null, activity: null, health: {} };
+  document.getElementById("goalInput").value = "";
+  document.getElementById("chipPanel").classList.remove("visible");
+  document.getElementById("next1").disabled = true;
+  document.getElementById("next2").disabled = true;
+  document.getElementById("next3").disabled = true;
+  ["fieldConditions","fieldMeds","fieldPregnant","fieldDrugs","fieldAlcohol"].forEach(id => {
+    document.getElementById(id).value = "";
+  });
+  [...document.querySelectorAll(".choice")].forEach(c => c.classList.remove("selected"));
+  goTo(0);
+}
+
+/* ---------------- results ---------------- */
+
+function isNoteworthy(value){
+  const v = value.trim().toLowerCase();
+  if(v === "") return false;
+  const blank = ["none","no","n/a","na","not applicable","nothing","0","never"];
+  return !blank.includes(v);
+}
+
+function showResults(){
+  state.health = {
+    conditions: document.getElementById("fieldConditions").value,
+    meds: document.getElementById("fieldMeds").value,
+    pregnant: document.getElementById("fieldPregnant").value,
+    drugs: document.getElementById("fieldDrugs").value,
+    alcohol: document.getElementById("fieldAlcohol").value
+  };
+
+  const selectedGoals = GOALS.filter(g => state.goals.includes(g.id));
+  const goalLabels = selectedGoals.map(g => g.label);
+
+  document.getElementById("resultsTitle").textContent =
+    goalLabels.length > 1 ? "Your multi-area protocol" : (goalLabels[0] || "Protocol") + " — starting protocol";
+
+  const activityLabel = ACTIVITY.find(a => a.id === state.activity)?.label.toLowerCase() || "your";
+  const expLabel = state.experience === "new" ? "new to this" : state.experience;
+  document.getElementById("resultsSub").textContent =
+    `Based on what you told us — ${goalLabels.join(", ").toLowerCase()}, ${activityLabel} activity, and ${expLabel} experience — here's what the research points toward.`;
+
+  const flags = [];
+  const h = state.health;
+  if(isNoteworthy(h.conditions)) flags.push(`Medical conditions: "${h.conditions.trim()}"`);
+  if(isNoteworthy(h.meds)) flags.push(`Current medications: "${h.meds.trim()}"`);
+  if(isNoteworthy(h.pregnant)) flags.push(`Pregnancy/nursing status: "${h.pregnant.trim()}"`);
+  if(isNoteworthy(h.drugs)) flags.push(`Substance use noted: "${h.drugs.trim()}"`);
+  if(isNoteworthy(h.alcohol)) flags.push(`Alcohol consumption: "${h.alcohol.trim()}"`);
+
+  const banner = document.getElementById("conditionalBanner");
+  const list = document.getElementById("conditionalBannerList");
+  list.innerHTML = "";
+  if(flags.length){
+    banner.style.display = "block";
+    document.getElementById("conditionalBannerText").textContent =
+      "You shared the following — treat this protocol as a discussion starting point only, and review it with a provider who knows your full history before proceeding:";
+    flags.forEach(f => {
+      const li = document.createElement("li");
+      li.textContent = f;
+      list.appendChild(li);
+    });
+  } else {
+    banner.style.display = "none";
+  }
+
+  const protocolList = document.getElementById("protocolList");
+  protocolList.innerHTML = "";
+  selectedGoals.forEach(goal => {
+    const group = document.createElement("div");
+    group.className = "goal-group";
+    const title = document.createElement("div");
+    title.className = "goal-group-title";
+    title.textContent = goal.label;
+    group.appendChild(title);
+
+    goal.protocols.forEach(p => {
+      const el = document.createElement("div");
+      el.className = "protocol";
+      el.innerHTML = `
+        <div class="protocol-head">
+          <div class="protocol-name">${p.name}</div>
+          <div class="evidence ${p.evidence}">${p.evidenceLabel}</div>
+        </div>
+        <div class="protocol-tag">${p.tag}</div>
+        <p>${p.text}</p>
+        <div class="meta-row">
+          <dl class="meta-item">
+            <dt>Typical form</dt>
+            <dd>${p.form}</dd>
+          </dl>
+          <dl class="meta-item">
+            <dt>Cycle length</dt>
+            <dd>${p.cycle}</dd>
+          </dl>
+        </div>
+      `;
+      group.appendChild(el);
+    });
+    protocolList.appendChild(group);
+  });
+
+  goTo(5);
+}
+</script>
+
+</body>
+</html>
