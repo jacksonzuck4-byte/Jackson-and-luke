@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Protocol — Peptide research &amp; goal matching</title>
+<title>Protocol — Peptide &amp; supplement research, matched to your goals</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -340,6 +340,7 @@
     border-top: 1px solid var(--line);
   }
   .goal-group:first-of-type .goal-group-title{ border-top: none; padding-top: 0; }
+  .glossary-group:first-of-type .glossary-group-title{ border-top: none; padding-top: 0; }
 
   .protocol{ padding: 22px 0; border-bottom: 1px solid var(--line); }
   .protocol-head{ display:flex; justify-content:space-between; align-items:baseline; gap: 16px; margin-bottom: 6px; }
@@ -355,6 +356,17 @@
   }
   .evidence.early, .evidence.animal{ border-color: rgba(226,144,90,0.4); color: var(--warn); }
   .evidence.clinical{ border-color: rgba(111,206,158,0.4); color: var(--accent); }
+
+  .protocol-badges{ display:flex; align-items:center; gap: 8px; flex:none; }
+  .kind-badge{
+    font-family: var(--mono);
+    font-size: 11px;
+    white-space: nowrap;
+    padding: 4px 8px;
+    border-radius: 0;
+    border: 2px solid var(--line);
+    color: var(--ink-soft);
+  }
 
   .protocol-tag{ font-family: var(--mono); font-size: 12px; color: var(--ink-soft); margin-bottom: 14px; }
   .protocol p{ margin: 0 0 10px; font-size: 15px; color: var(--ink-soft); }
@@ -500,21 +512,21 @@
   <!-- ============== HOME TAB ============== -->
   <section class="tab-panel active" id="tab-home">
     <div class="hero">
-      <h1>Research peptides without the guesswork.</h1>
-      <p>Protocol turns a goal into a research-backed starting point, explains the peptides behind it in plain language, and gives you a place to track your own sourcing research — all before you talk to a provider.</p>
+      <h1>Research peptides and supplements without the guesswork.</h1>
+      <p>Protocol turns a goal into a research-backed starting point — peptides and ordinary over-the-counter supplements alike — explains what's behind it in plain language, and gives you a place to track your own sourcing research, all before you talk to a provider.</p>
     </div>
 
     <div class="guide-grid">
       <div class="guide-card">
         <div class="guide-card-label">01</div>
         <h3>Take the survey</h3>
-        <p>Describe your goal in your own words, answer a few quick questions, and get a starting protocol matched to published and preclinical research.</p>
+        <p>Describe your goal in your own words, answer a few quick questions, and get a starting protocol matched to published and preclinical research — peptides and supplements both, where either applies.</p>
         <button type="button" class="cta ghost" onclick="switchTab('survey')">Start the survey →</button>
       </div>
       <div class="guide-card">
         <div class="guide-card-label">02</div>
         <h3>Read the glossary</h3>
-        <p>Every peptide the survey can suggest, explained: what it is, what it does, benefits, risks, and what the research actually shows. Click any entry to expand it.</p>
+        <p>Every peptide and supplement the survey can suggest, explained: what it is, what it does, benefits, risks, and what the research actually shows. Click any entry to expand it.</p>
         <button type="button" class="cta ghost" onclick="switchTab('glossary')">Browse the glossary →</button>
       </div>
       <div class="guide-card">
@@ -527,7 +539,8 @@
 
     <div class="disclaimer-block" style="margin-top:52px;">
       <strong>Before you go further</strong>
-      <p>Nothing on this site is medical advice, a diagnosis, or a prescription. Most peptides discussed here are not FDA-approved for the uses people commonly discuss them for, and product purity/legality vary by source and location. Talk to a licensed provider before starting anything.</p>
+      <p>Nothing on this site is medical advice, a diagnosis, or a prescription. Talk to a licensed provider before starting anything, especially if you're combining multiple products or have an existing health condition.</p>
+      <p>Peptides and dietary supplements are regulated very differently, and this site treats them as different risk categories, not one bucket. Most peptides here are unapproved research chemicals typically sourced outside normal pharmacy channels. Supplements are legal, widely available products — the FDA doesn't pre-approve them before sale the way it does drugs, but they're a different, generally lower-risk category. Check the evidence tag on every entry either way; it reflects how strong the actual human research is, not how popular or legal the product is.</p>
     </div>
   </section>
 
@@ -656,7 +669,7 @@
       <div class="disclaimer-block">
         <strong>Not medical advice</strong>
         <p>This tool summarizes published and preclinical research to help you have a more informed conversation with a licensed healthcare provider. It does not diagnose, treat, or prescribe, and it is not a substitute for professional medical care.</p>
-        <p>Peptide products vary widely in purity and regulatory status. Sourcing, legality, and appropriate use depend on your location and health history — always confirm with a licensed provider before starting anything, especially anything flagged above.</p>
+        <p>Peptide products vary widely in purity and regulatory status, and are typically sourced outside normal pharmacy channels — sourcing, legality, and appropriate use depend on your location and health history. Dietary supplements are legal and widely available, but aren't pre-approved by the FDA before sale, and quality varies by brand. Either way, confirm with a licensed provider before starting anything, especially anything flagged above — the evidence badge on each item reflects research strength, not safety.</p>
       </div>
 
       <div class="restart-row">
@@ -669,8 +682,8 @@
   <!-- ============== GLOSSARY TAB ============== -->
   <section class="tab-panel" id="tab-glossary">
     <div class="hero" style="padding-top:20px; padding-bottom:8px;">
-      <h1 style="max-width:16ch; font-size:clamp(26px,5vw,36px);">Peptide glossary</h1>
-      <p style="margin-bottom:16px;">Every peptide the survey can suggest, in plain language. Evidence levels reflect how much of the research is human/clinical versus animal/preclinical — click an entry to expand it.</p>
+      <h1 style="max-width:16ch; font-size:clamp(26px,5vw,36px);">Peptide &amp; supplement glossary</h1>
+      <p style="margin-bottom:16px;">Every peptide and supplement the survey can suggest, in plain language, grouped below by kind. Evidence levels reflect how much of the research is human/clinical versus animal/preclinical — click an entry to expand it.</p>
     </div>
 
     <input type="text" class="glossary-search" id="glossarySearch" placeholder="Search by name (e.g. BPC-157, sleep, GHRH)..." oninput="filterGlossary()">
@@ -760,6 +773,39 @@ const GOALS = [
         form: "Subcutaneous",
         cycle: "Provider-set",
         glossaryIds: ["tb500"]
+      },
+      {
+        name: "Collagen Peptides (Oral)",
+        tag: "Hydrolyzed collagen protein",
+        evidence: "early",
+        evidenceLabel: "Growing but mixed evidence",
+        kind: "supplement",
+        text: "Supplies the amino acids used to rebuild collagen in tendons, ligaments, and skin. Modest but real evidence for joint comfort with consistent daily use over months — a much gentler, legal complement to the injectable peptides above.",
+        form: "Oral powder or capsule",
+        cycle: "Daily, ongoing (8-12+ weeks to assess effect)",
+        glossaryIds: ["collagen"]
+      },
+      {
+        name: "Vitamin C",
+        tag: "Water-soluble vitamin",
+        evidence: "clinical",
+        evidenceLabel: "Extensively studied",
+        kind: "supplement",
+        text: "Required for your body to actually synthesize new collagen — genuinely essential to the tissue-repair process the peptides above are trying to speed up, not just an add-on.",
+        form: "Oral capsule or tablet",
+        cycle: "Daily, ongoing",
+        glossaryIds: ["vitaminc"]
+      },
+      {
+        name: "Curcumin (Turmeric Extract)",
+        tag: "Polyphenol compound",
+        evidence: "early",
+        evidenceLabel: "Promising but limited by poor absorption",
+        kind: "supplement",
+        text: "The concentrated anti-inflammatory compound from turmeric, with real human trials showing reduced joint pain and stiffness — bioavailability-enhanced formulations matter a lot here.",
+        form: "Oral capsule (look for a bioavailability-enhanced formulation)",
+        cycle: "Daily, ongoing",
+        glossaryIds: ["curcumin"]
       }
     ]
   },
@@ -787,6 +833,39 @@ const GOALS = [
         form: "Subcutaneous",
         cycle: "Provider-set, nightly protocols typical",
         glossaryIds: ["sermorelin"]
+      },
+      {
+        name: "Creatine Monohydrate",
+        tag: "Amino acid derivative",
+        evidence: "clinical",
+        evidenceLabel: "Extensively studied",
+        kind: "supplement",
+        text: "The single most well-evidenced supplement for strength and power output when paired with resistance training — a reasonable foundation before considering anything less studied.",
+        form: "Oral powder",
+        cycle: "Daily, ongoing",
+        glossaryIds: ["creatine"]
+      },
+      {
+        name: "Whey Protein",
+        tag: "Complete dairy-derived protein",
+        evidence: "clinical",
+        evidenceLabel: "Extensively studied",
+        kind: "supplement",
+        text: "A convenient, well-absorbed way to hit the daily protein intake that actually drives the muscle growth these peptides are aiming to support.",
+        form: "Oral powder",
+        cycle: "Daily, as needed to hit protein targets",
+        glossaryIds: ["wheyprotein"]
+      },
+      {
+        name: "Vitamin D3",
+        tag: "Fat-soluble vitamin",
+        evidence: "clinical",
+        evidenceLabel: "Extensively studied",
+        kind: "supplement",
+        text: "Commonly deficient, and correction has decent evidence for muscle strength and function — worth checking with a blood test before assuming you need it.",
+        form: "Oral softgel or capsule",
+        cycle: "Daily, ongoing (confirm need with a blood test)",
+        glossaryIds: ["vitamind3"]
       }
     ]
   },
@@ -804,6 +883,39 @@ const GOALS = [
         form: "Subcutaneous",
         cycle: "Provider-set",
         glossaryIds: ["dsip"]
+      },
+      {
+        name: "Melatonin",
+        tag: "Circadian hormone",
+        evidence: "clinical",
+        evidenceLabel: "Well studied, mixed real-world results",
+        kind: "supplement",
+        text: "Shifts your circadian timing rather than sedating you — solid evidence for jet lag and shift work, weaker (and dose-dependent) evidence for general nightly use.",
+        form: "Oral tablet or gummy",
+        cycle: "As needed, short-term; low dose (0.5-3mg)",
+        glossaryIds: ["melatonin"]
+      },
+      {
+        name: "Magnesium Glycinate",
+        tag: "Essential mineral (chelated form)",
+        evidence: "clinical",
+        evidenceLabel: "Well studied for deficiency",
+        kind: "supplement",
+        text: "A gentler-on-digestion form of magnesium, with decent evidence for improving sleep quality specifically in people who are actually deficient.",
+        form: "Oral capsule or powder",
+        cycle: "Daily, typically evening",
+        glossaryIds: ["magnesium"]
+      },
+      {
+        name: "Ashwagandha",
+        tag: "Adaptogenic herb",
+        evidence: "early",
+        evidenceLabel: "Growing clinical interest",
+        kind: "supplement",
+        text: "An adaptogen with a growing number of trials showing reduced stress and improved sleep quality, particularly for stress-related sleep issues.",
+        form: "Oral capsule or powder",
+        cycle: "Daily, ongoing (trials typically 8-12 weeks)",
+        glossaryIds: ["ashwagandha"]
       }
     ]
   },
@@ -831,6 +943,39 @@ const GOALS = [
         form: "Intranasal",
         cycle: "Provider-set",
         glossaryIds: ["selank"]
+      },
+      {
+        name: "L-Theanine",
+        tag: "Amino acid (from tea leaves)",
+        evidence: "clinical",
+        evidenceLabel: "Well studied, mostly with caffeine",
+        kind: "supplement",
+        text: "Best evidence exists in combination with caffeine, where it reliably takes the edge off jitteriness without adding sedation.",
+        form: "Oral capsule, often with caffeine",
+        cycle: "As needed",
+        glossaryIds: ["ltheanine"]
+      },
+      {
+        name: "Omega-3 (Fish Oil)",
+        tag: "Essential fatty acids",
+        evidence: "clinical",
+        evidenceLabel: "Extensively studied",
+        kind: "supplement",
+        text: "Reasonable evidence for cognitive and mood support, especially if your dietary intake of EPA/DHA is currently low.",
+        form: "Oral softgel or liquid",
+        cycle: "Daily, ongoing",
+        glossaryIds: ["omega3"]
+      },
+      {
+        name: "Rhodiola Rosea",
+        tag: "Adaptogenic herb",
+        evidence: "early",
+        evidenceLabel: "Early-to-moderate clinical evidence",
+        kind: "supplement",
+        text: "An adaptogen studied for reducing mental fatigue and improving attention under stress — a smaller evidence base than more mainstream options.",
+        form: "Oral capsule (standardized extract)",
+        cycle: "Daily, often cycled",
+        glossaryIds: ["rhodiola"]
       }
     ]
   },
@@ -848,6 +993,28 @@ const GOALS = [
         form: "Topical or subcutaneous",
         cycle: "Provider-set",
         glossaryIds: ["ghkcu"]
+      },
+      {
+        name: "Collagen Peptides (Oral)",
+        tag: "Hydrolyzed collagen protein",
+        evidence: "early",
+        evidenceLabel: "Growing but mixed evidence",
+        kind: "supplement",
+        text: "The most direct oral option for skin — several trials show modest improvements in elasticity and hydration with months of consistent use.",
+        form: "Oral powder or capsule",
+        cycle: "Daily, ongoing (8-12+ weeks)",
+        glossaryIds: ["collagen"]
+      },
+      {
+        name: "Vitamin C",
+        tag: "Water-soluble vitamin",
+        evidence: "clinical",
+        evidenceLabel: "Extensively studied",
+        kind: "supplement",
+        text: "An antioxidant and essential cofactor for collagen synthesis — foundational to skin health whether taken orally or used topically.",
+        form: "Oral capsule/tablet, or topical",
+        cycle: "Daily, ongoing",
+        glossaryIds: ["vitaminc"]
       }
     ]
   },
@@ -875,6 +1042,39 @@ const GOALS = [
         form: "Subcutaneous",
         cycle: "Provider-set",
         glossaryIds: ["thymosinalpha1"]
+      },
+      {
+        name: "Vitamin D3",
+        tag: "Fat-soluble vitamin",
+        evidence: "clinical",
+        evidenceLabel: "Extensively studied",
+        kind: "supplement",
+        text: "Correcting a deficiency has real evidence for immune and bone health — a far more established longevity-adjacent intervention than most compounds on this list.",
+        form: "Oral softgel or capsule",
+        cycle: "Daily, ongoing",
+        glossaryIds: ["vitamind3"]
+      },
+      {
+        name: "Omega-3 (Fish Oil)",
+        tag: "Essential fatty acids",
+        evidence: "clinical",
+        evidenceLabel: "Extensively studied",
+        kind: "supplement",
+        text: "Genuine cardiovascular outcome trials back its role here, which is more than can be said for most longevity-marketed compounds.",
+        form: "Oral softgel or liquid",
+        cycle: "Daily, ongoing",
+        glossaryIds: ["omega3"]
+      },
+      {
+        name: "Resveratrol",
+        tag: "Polyphenol (stilbene compound)",
+        evidence: "animal",
+        evidenceLabel: "Mostly animal/preclinical for longevity claims",
+        kind: "supplement",
+        text: "Popularized by striking lifespan-extension results in simple organisms — human longevity benefit specifically remains unproven, similar to Epitalon above.",
+        form: "Oral capsule",
+        cycle: "Daily, ongoing",
+        glossaryIds: ["resveratrol"]
       }
     ]
   },
@@ -902,6 +1102,28 @@ const GOALS = [
         form: "Subcutaneous",
         cycle: "Provider-set",
         glossaryIds: ["aod9604"]
+      },
+      {
+        name: "Green Tea Extract (EGCG)",
+        tag: "Catechin polyphenol",
+        evidence: "early",
+        evidenceLabel: "Modest evidence",
+        kind: "supplement",
+        text: "A modest, real bump to calorie burn shown in meta-analyses — best thought of as a small addition to diet and training, not a replacement for either.",
+        form: "Oral capsule",
+        cycle: "Daily, with food",
+        glossaryIds: ["greentea"]
+      },
+      {
+        name: "Glucomannan",
+        tag: "Soluble dietary fiber",
+        evidence: "clinical",
+        evidenceLabel: "Modest, consistent clinical evidence",
+        kind: "supplement",
+        text: "An expanding fiber that increases fullness before meals, with consistent (if modest) trial evidence for supporting weight loss — must be taken with plenty of water.",
+        form: "Oral capsule with a full glass of water",
+        cycle: "Before meals, ongoing",
+        glossaryIds: ["glucomannan"]
       }
     ]
   }
@@ -1216,6 +1438,393 @@ const PEPTIDES = [
   }
 ];
 
+/* ---------------- data: glossary — supplements ----------------
+   Unlike the peptides above, these are ordinary, legal, over-the-counter
+   dietary supplements. Note the FDA doesn't pre-approve supplements the
+   way it approves drugs — manufacturers self-certify under DSHEA, and the
+   FDA can only act after the fact. That's a different (generally lower)
+   risk category than research-chemical peptides, not the same one. */
+
+const SUPPLEMENTS = [
+  {
+    id: "creatine",
+    name: "Creatine Monohydrate",
+    tag: "Amino acid derivative",
+    evidence: "clinical",
+    evidenceLabel: "Extensively studied",
+    kind: "supplement",
+    whatItIs: "A naturally occurring compound made from amino acids, found in muscle tissue and small amounts of red meat/fish, sold as a concentrated dietary supplement. It's regulated as a food, not pre-approved by the FDA as a drug.",
+    whatItDoes: "Increases phosphocreatine stores in muscle, which helps regenerate ATP during short, high-intensity effort — the mechanism behind its strength and power benefits.",
+    benefits: [
+      "One of the most heavily researched supplements in existence, with consistent evidence for increased strength, power output, and lean mass alongside resistance training",
+      "Some evidence for cognitive benefits, particularly under sleep deprivation or in people with lower baseline stores",
+      "Decades of safety data at standard doses in healthy adults"
+    ],
+    risks: [
+      "Mild water retention is common and expected, not harmful",
+      "Occasional GI discomfort, usually resolved by spreading doses through the day or using smaller amounts",
+      "People with pre-existing kidney disease should talk to a provider before use, though it hasn't been shown to harm healthy kidneys"
+    ],
+    research: "Genuinely one of the best-supported supplements on the market — hundreds of human trials across athletic and clinical populations. This is a different evidence category than most peptides on this site: multiple meta-analyses, not just early or animal data.",
+    faqs: [
+      { q: "Does creatine cause hair loss?", a: "One small older study found an increase in a hormone (DHT) linked to hair loss; it didn't measure actual hair loss, and this hasn't been replicated in a way that establishes a causal link." },
+      { q: "Loading phase or not?", a: "A loading phase (higher dose for 5-7 days) saturates muscle stores faster, but a consistent daily dose without loading reaches the same saturation point over about 3-4 weeks." }
+    ]
+  },
+  {
+    id: "wheyprotein",
+    name: "Whey Protein",
+    tag: "Complete dairy-derived protein",
+    evidence: "clinical",
+    evidenceLabel: "Extensively studied",
+    kind: "supplement",
+    whatItIs: "A protein derived from milk during cheese production, sold as a powder supplement. Like other protein supplements, it's regulated as a food, not as an FDA-approved drug.",
+    whatItDoes: "Supplies a fast-absorbing, complete amino acid profile — including leucine, a key trigger for muscle protein synthesis — making it a convenient way to hit daily protein targets around training.",
+    benefits: [
+      "Strong evidence for supporting muscle growth and recovery when total daily protein and training are adequate",
+      "Convenient way to close a protein gap versus relying on whole food alone",
+      "Well-tolerated by most people without lactose intolerance"
+    ],
+    risks: [
+      "GI discomfort or bloating in people with lactose sensitivity — whey isolate has less lactose than concentrate",
+      "Not a magic multiplier: it only helps if your total daily protein and training are already reasonable",
+      "Product quality varies significantly — independent testing has found some brands with heavy metal contamination or protein content below label claims"
+    ],
+    research: "Extensively studied as part of the broader dietary protein literature. The evidence supports total daily protein intake as the main driver, with whey being one convenient, well-absorbed source rather than uniquely superior to other complete proteins.",
+    faqs: [
+      { q: "Is more protein always better?", a: "No — benefits plateau once you're hitting adequate daily intake for your training and body weight; more beyond that point doesn't add proportional benefit." },
+      { q: "Whey vs. plant protein?", a: "Whey has a slight edge in leucine content and absorption speed, but well-formulated plant blends can close most of that gap — the bigger factor is hitting your total daily intake." }
+    ]
+  },
+  {
+    id: "vitamind3",
+    name: "Vitamin D3 (Cholecalciferol)",
+    tag: "Fat-soluble vitamin",
+    evidence: "clinical",
+    evidenceLabel: "Extensively studied",
+    kind: "supplement",
+    whatItIs: "A vitamin the body produces from sun exposure and that's also available through food and supplements; D3 (cholecalciferol) is the form most commonly used in supplements and most effectively raises blood levels.",
+    whatItDoes: "Regulates calcium absorption and bone health, and plays a role in immune function and muscle performance — deficiency is common, especially with limited sun exposure.",
+    benefits: [
+      "Well-established role in bone health and reducing fracture risk in deficient individuals",
+      "Some evidence for supporting immune function and muscle strength, particularly when correcting a real deficiency",
+      "Cheap, simple blood test available to confirm whether you actually need it"
+    ],
+    risks: [
+      "Toxicity is rare but possible with very high doses over time, causing elevated calcium levels",
+      "Benefits are strongest when correcting an actual deficiency — supplementing when you're already sufficient shows much weaker evidence for extra benefit",
+      "Fat-soluble, so it can build up over time unlike water-soluble vitamins"
+    ],
+    research: "One of the more clinically established vitamins — deficiency is well-documented and correction has consistent evidence for bone and immune outcomes. Evidence for benefits beyond correcting deficiency is considerably weaker than marketing often suggests.",
+    faqs: [
+      { q: "How do I know if I need it?", a: "A blood test for 25-hydroxyvitamin D is the standard way to check — supplementing blindly means you might already be sufficient or might need a much higher dose than typical over-the-counter amounts." },
+      { q: "Does it need to be taken with fat?", a: "Yes — being fat-soluble, absorption improves when taken with a meal containing some fat." }
+    ]
+  },
+  {
+    id: "melatonin",
+    name: "Melatonin",
+    tag: "Circadian hormone",
+    evidence: "clinical",
+    evidenceLabel: "Well studied, mixed real-world results",
+    kind: "supplement",
+    whatItIs: "A hormone your brain naturally produces in response to darkness to help regulate your sleep-wake cycle. Supplemental melatonin is sold over the counter in the US as a dietary supplement, unlike in some other countries where it's prescription-only.",
+    whatItDoes: "Signals to your body that it's time to wind down, primarily helping shift the timing of your sleep cycle rather than acting as a sedative.",
+    benefits: [
+      "Reasonably good evidence for reducing time to fall asleep, especially for jet lag or shift-work-related circadian misalignment",
+      "Non-habit-forming at typical doses, unlike many sedative sleep aids",
+      "Short-term use has a strong safety record"
+    ],
+    risks: [
+      "US supplement doses are often far higher than what's used in research (some products contain many times the studied 0.5-3mg range), which can cause grogginess or vivid dreams",
+      "Independent testing has repeatedly found significant mismatches between labeled and actual melatonin content in over-the-counter products",
+      "Long-term daily use, especially in children, hasn't been as well studied as short-term use"
+    ],
+    research: "Genuinely clinical evidence exists for circadian-timing uses like jet lag, but the popular use case — a nightly general sleep aid — has a weaker and more mixed evidence base than its popularity suggests, and much of that gap comes down to dosing and product quality, not the hormone itself.",
+    faqs: [
+      { q: "Is more melatonin better for sleep?", a: "No — research generally supports lower doses (0.5-3mg) for circadian effects; megadoses common in US products aren't shown to work better and can increase side effects." },
+      { q: "Can I take it every night long-term?", a: "Short-term use is well-supported; long-term nightly use has less research, so periodic reassessment with a provider is reasonable." }
+    ]
+  },
+  {
+    id: "magnesium",
+    name: "Magnesium Glycinate",
+    tag: "Essential mineral (chelated form)",
+    evidence: "clinical",
+    evidenceLabel: "Well studied for deficiency",
+    kind: "supplement",
+    whatItIs: "A chelated form of magnesium (bound to the amino acid glycine), chosen for supplements because it's gentler on digestion than other forms like magnesium oxide or citrate.",
+    whatItDoes: "Magnesium is a cofactor in hundreds of enzymatic reactions, including ones involved in muscle relaxation, nervous system regulation, and sleep quality — a genuine deficiency can affect all of these.",
+    benefits: [
+      "Correcting a real magnesium deficiency has solid evidence for improving sleep quality, muscle cramping, and general nervous-system symptoms",
+      "The glycinate form causes less of the laxative effect seen with magnesium oxide/citrate",
+      "Glycine itself has some independent evidence for sleep support"
+    ],
+    risks: [
+      "High doses of any magnesium form can cause diarrhea or GI upset",
+      "People with kidney disease need to be cautious, since impaired kidneys can't clear excess magnesium as effectively",
+      "As with several entries here, the strongest evidence is about correcting deficiency, not about supplementing when you're already replete"
+    ],
+    research: "Magnesium deficiency is common and correction has decent clinical support for sleep and muscle symptoms. The strongest evidence applies to people who are actually deficient, which not everyone taking it is.",
+    faqs: [
+      { q: "How is it different from magnesium oxide?", a: "Magnesium oxide is cheaper and has more elemental magnesium by weight but is poorly absorbed and more likely to cause GI upset; glycinate trades some elemental content for much better tolerability." },
+      { q: "Should I take it at night?", a: "It's commonly taken in the evening given its association with muscle relaxation and sleep, though absorption isn't strictly time-dependent." }
+    ]
+  },
+  {
+    id: "ltheanine",
+    name: "L-Theanine",
+    tag: "Amino acid (from tea leaves)",
+    evidence: "clinical",
+    evidenceLabel: "Well studied, mostly with caffeine",
+    kind: "supplement",
+    whatItIs: "An amino acid found naturally in tea leaves, isolated and sold as a standalone supplement, often paired with caffeine.",
+    whatItDoes: "Associated with promoting alpha brain wave activity linked to a calm, alert mental state — the basis for its reputation as a way to \"smooth out\" caffeine's jittery edge.",
+    benefits: [
+      "Decent evidence for reducing the jitteriness/anxiety some people get from caffeine when the two are combined",
+      "Some standalone evidence for mild relaxation and attention benefits without sedation",
+      "Very well-tolerated with a strong safety record"
+    ],
+    risks: [
+      "Much of the strongest evidence is for the caffeine + L-theanine combination specifically, not L-theanine alone",
+      "Effects are subtle for many people compared to caffeine's more noticeable effect",
+      "Long-term daily use has less research than short-term studies"
+    ],
+    research: "A reasonably well-studied supplement, especially in combination with caffeine, where the combined-effect research is more consistent than the standalone-supplement literature.",
+    faqs: [
+      { q: "What's the typical caffeine:theanine ratio people use?", a: "A commonly referenced starting ratio in research and popular use is roughly 1:2 (e.g., 100mg caffeine to 200mg theanine), though individual tolerance varies a lot." },
+      { q: "Does it work without caffeine?", a: "Some standalone research shows mild calming/attention effects, but the effect size is smaller and less consistent than the combination studies." }
+    ]
+  },
+  {
+    id: "omega3",
+    name: "Omega-3 (Fish Oil / EPA & DHA)",
+    tag: "Essential fatty acids",
+    evidence: "clinical",
+    evidenceLabel: "Extensively studied",
+    kind: "supplement",
+    whatItIs: "Long-chain omega-3 fatty acids (EPA and DHA) found in fatty fish and algae, concentrated into supplement form for people who don't get enough from diet.",
+    whatItDoes: "Incorporated into cell membranes throughout the body, with well-documented anti-inflammatory signaling effects and roles in cardiovascular and brain health.",
+    benefits: [
+      "Strong evidence for reducing triglycerides and supporting cardiovascular health, which is why high-dose prescription versions exist for that specific use",
+      "Reasonable evidence for mood and cognitive support, especially in people with low dietary intake",
+      "Some evidence for skin barrier and inflammatory skin condition support"
+    ],
+    risks: [
+      "Higher doses can have a mild blood-thinning effect — relevant if you're on anticoagulant medication or before surgery",
+      "Fishy aftertaste/burps are a common, harmless complaint that can often be reduced by taking it with food or choosing enteric-coated forms",
+      "Product quality and oxidation vary — rancid fish oil is both unpleasant and less beneficial"
+    ],
+    research: "One of the most extensively researched supplements, with genuine large-scale cardiovascular outcome trials behind it — though results for the general population (versus people with elevated triglycerides or documented low intake) are more modest than early hype suggested.",
+    faqs: [
+      { q: "Is fish oil the same as a prescription omega-3?", a: "Prescription formulations (like icosapent ethyl) are purified, higher-dose, and FDA-approved for specific cardiovascular indications — a different regulatory category than an over-the-counter fish oil supplement." },
+      { q: "Algae oil vs. fish oil?", a: "Algae-based omega-3 supplements provide the same EPA/DHA without fish, and are a reasonable option for vegetarians/vegans or anyone concerned about ocean contaminants." }
+    ]
+  },
+  {
+    id: "collagen",
+    name: "Collagen Peptides (Oral)",
+    tag: "Hydrolyzed collagen protein",
+    evidence: "early",
+    evidenceLabel: "Growing but mixed evidence",
+    kind: "supplement",
+    whatItIs: "Collagen protein broken down (hydrolyzed) into smaller peptide chains for easier absorption, sold as a powder or capsule supplement — distinct from the injectable research peptides elsewhere on this site, this is an ordinary oral protein supplement.",
+    whatItDoes: "Supplies amino acids (notably glycine and proline) that are building blocks for the body's own collagen production in skin, joints, and connective tissue.",
+    benefits: [
+      "Several human trials report modest improvements in skin elasticity and hydration with consistent daily use over months",
+      "Some evidence for reduced joint discomfort in people with joint-related activity pain",
+      "Generally very well-tolerated with minimal side effects"
+    ],
+    risks: [
+      "Effect sizes in trials are often modest, and many studies are funded by collagen manufacturers, which is worth factoring into how you weigh the evidence",
+      "No strong evidence that the collagen you eat is specifically routed to the areas you want it to help (skin vs. joints) versus being broken down and used like any other protein",
+      "Marine and bovine sources are most common — worth checking if that matters to your diet or allergies"
+    ],
+    research: "A genuinely growing evidence base with real human trials (unlike most injectable peptides on this site), but effect sizes are modest and industry-funded research is common in this space, so it's reasonable to weigh the evidence a bit more skeptically than the marketing around it.",
+    faqs: [
+      { q: "Is this the same as GHK-Cu or other peptides in the glossary?", a: "No — this is an oral protein supplement broken into peptide-sized chains for digestion, not an injectable signaling peptide like GHK-Cu or BPC-157. Different product category, different mechanism." },
+      { q: "How long before I'd notice anything?", a: "Studies showing benefit typically used consistent daily use for 8-12 weeks or longer — this isn't a fast-acting supplement." }
+    ]
+  },
+  {
+    id: "vitaminc",
+    name: "Vitamin C (Ascorbic Acid)",
+    tag: "Water-soluble vitamin",
+    evidence: "clinical",
+    evidenceLabel: "Extensively studied",
+    kind: "supplement",
+    whatItIs: "An essential vitamin the body can't produce on its own, required for numerous biological processes including collagen synthesis.",
+    whatItDoes: "A cofactor required for the enzymes that stabilize collagen, plus a well-known antioxidant and support for immune cell function.",
+    benefits: [
+      "Well-established, essential role in collagen synthesis — true deficiency (scurvy) causes serious connective tissue problems, showing how central it is to skin/joint health",
+      "Some evidence for modestly reducing the duration (not the incidence) of colds when taken regularly",
+      "Very cheap and very well-studied relative to most supplements"
+    ],
+    risks: [
+      "High doses can cause GI upset/diarrhea — the body simply excretes what it doesn't use, so more isn't better past a certain point",
+      "People with a history of kidney stones (specifically oxalate stones) should be cautious with high-dose supplementation",
+      "Interacts with certain lab tests (e.g., glucose monitoring) at high doses"
+    ],
+    research: "About as well-established a nutrient as exists — the deficiency disease (scurvy) and its cure are some of the oldest documented nutrition science. Most people in developed countries get adequate amounts from diet, so supplementation mainly helps close a gap rather than provide benefit beyond sufficiency.",
+    faqs: [
+      { q: "Do I need vitamin C for a collagen supplement to work?", a: "Since vitamin C is required for collagen synthesis, some people pair it with collagen supplements on the theory that it supports the body's use of those amino acids — though this specific combination hasn't been extensively trial-tested together." },
+      { q: "Is more always better for immunity?", a: "No — evidence supports adequate intake, not megadosing; extra vitamin C beyond what your body uses is simply excreted." }
+    ]
+  },
+  {
+    id: "curcumin",
+    name: "Curcumin (Turmeric Extract)",
+    tag: "Polyphenol compound",
+    evidence: "early",
+    evidenceLabel: "Promising but limited by poor absorption",
+    kind: "supplement",
+    whatItIs: "The primary active compound in turmeric root, concentrated and often paired with black pepper extract (piperine) or special formulations to improve its notoriously poor natural absorption.",
+    whatItDoes: "Studied for anti-inflammatory and antioxidant effects, proposed to work through multiple inflammatory signaling pathways.",
+    benefits: [
+      "Several human trials report reduced joint pain/stiffness in osteoarthritis, comparable in some studies to mild over-the-counter pain relievers",
+      "Antioxidant properties are well-documented in lab settings",
+      "Long history of dietary use as a spice with a good general safety profile"
+    ],
+    risks: [
+      "Extremely poor natural bioavailability — standard turmeric powder is very different from a bioavailability-enhanced curcumin extract in terms of what actually reaches your bloodstream",
+      "Can interact with blood thinners and may affect gallbladder conditions",
+      "Many studies are small, short-term, or industry-funded, and results are inconsistent across different curcumin formulations"
+    ],
+    research: "The lab-level anti-inflammatory evidence is strong, but real-world human benefit depends heavily on formulation and absorption, which varies enormously between products — a meaningful caveat that's often left out of marketing.",
+    faqs: [
+      { q: "Why does the label mention black pepper?", a: "Piperine (from black pepper) can significantly increase curcumin absorption, which is why many formulations include it — a turmeric supplement without an absorption enhancer may deliver very little active curcumin." },
+      { q: "Is the turmeric spice the same as a curcumin supplement?", a: "No — turmeric powder is mostly starch and contains only a small percentage of curcumin, at a dose far below what's used in clinical studies." }
+    ]
+  },
+  {
+    id: "ashwagandha",
+    name: "Ashwagandha",
+    tag: "Adaptogenic herb",
+    evidence: "early",
+    evidenceLabel: "Growing clinical interest",
+    kind: "supplement",
+    whatItIs: "A root extract used in Ayurvedic traditional medicine for centuries, now studied in modern clinical trials as an \"adaptogen\" — a category of herbs proposed to help the body manage stress.",
+    whatItDoes: "Proposed to modulate cortisol (the primary stress hormone) and has been studied for effects on stress, sleep, and, in some trials, strength and testosterone in men.",
+    benefits: [
+      "A growing number of randomized trials report reduced self-reported stress and cortisol levels",
+      "Some trials report modest strength and body composition benefits when combined with resistance training",
+      "Some evidence for sleep quality improvements, particularly in people with stress-related sleep issues"
+    ],
+    risks: [
+      "Can affect thyroid hormone levels — worth caution for anyone with a thyroid condition",
+      "Not well studied in pregnancy (traditional use suggests avoiding it) or in combination with sedative/thyroid medications",
+      "Most trials are relatively short-term (weeks to a few months), so longer-term daily use isn't as well characterized"
+    ],
+    research: "A genuinely growing body of modern randomized controlled trials, which is more than most herbal supplements can claim — but the total evidence base is still much smaller than for something like creatine or vitamin D, and trial quality varies.",
+    faqs: [
+      { q: "Will it lower my cortisol too much?", a: "Studies show reductions in elevated cortisol under stress rather than suppression below normal levels, but anyone on medications affecting the endocrine system should check with a provider first." },
+      { q: "Root extract or leaf extract?", a: "Most of the clinical trial evidence uses root extract specifically — formulations vary, so it's worth checking which part of the plant a product actually uses." }
+    ]
+  },
+  {
+    id: "rhodiola",
+    name: "Rhodiola Rosea",
+    tag: "Adaptogenic herb",
+    evidence: "early",
+    evidenceLabel: "Early-to-moderate clinical evidence",
+    kind: "supplement",
+    whatItIs: "A plant that grows in cold, high-altitude regions, traditionally used in Scandinavian and Russian folk medicine and studied as another \"adaptogen\" for fatigue and stress.",
+    whatItDoes: "Proposed to influence stress-response pathways and neurotransmitter activity, studied mainly for reducing mental and physical fatigue.",
+    benefits: [
+      "Several small trials report reduced perceived fatigue and improved attention under stress or sleep deprivation",
+      "Some evidence for mild mood support",
+      "Generally well-tolerated with a mild side-effect profile in studies"
+    ],
+    risks: [
+      "Most trials are small and short-term, so the evidence base is thinner than more established supplements",
+      "Standardization varies significantly between products (look for a standardized rosavin/salidroside content), which makes comparing studies and products difficult",
+      "Could theoretically interact with stimulant medications given its proposed alerting effects, though this isn't well studied"
+    ],
+    research: "Early-to-moderate clinical evidence with real human trials, but a smaller and less consistent body of research than more mainstream supplements — a reasonable option to research further rather than a well-settled case.",
+    faqs: [
+      { q: "How is it different from ashwagandha?", a: "Both are called adaptogens, but Rhodiola is more associated with mental alertness/fatigue reduction, while ashwagandha's trial evidence leans more toward stress/cortisol and sleep — they're not interchangeable." },
+      { q: "What should I look for on the label?", a: "Look for a standardized extract (commonly 3% rosavins / 1% salidroside), since that's closer to what's actually been studied in trials." }
+    ]
+  },
+  {
+    id: "resveratrol",
+    name: "Resveratrol",
+    tag: "Polyphenol (stilbene compound)",
+    evidence: "animal",
+    evidenceLabel: "Mostly animal/preclinical for longevity claims",
+    kind: "supplement",
+    whatItIs: "A compound found in the skin of red grapes and a few other plants, isolated and concentrated into supplement form, popularized by early lab research into red wine and longevity.",
+    whatItDoes: "Proposed to activate sirtuins, a family of proteins linked to cellular stress resistance and, in animal studies, lifespan extension — the same pathway of interest behind much of the current longevity-supplement trend.",
+    benefits: [
+      "Strong and consistent lifespan-extension effects in lower organisms (yeast, worms, some rodent studies), which is the basis of its popularity",
+      "Some human trials show modest improvements in cardiovascular markers like blood pressure and endothelial function",
+      "Antioxidant properties are well-documented in lab settings"
+    ],
+    risks: [
+      "Human longevity benefit has not been demonstrated — the striking results are in much simpler organisms and don't reliably translate to humans",
+      "Poor natural bioavailability means most of an oral dose doesn't reach systemic circulation intact",
+      "Can interact with blood thinners and has weak estrogenic activity worth considering for hormone-sensitive conditions"
+    ],
+    research: "A textbook case of promising animal/preclinical data that hasn't yet translated into demonstrated human longevity benefit. Human trials exist for narrower cardiovascular and metabolic markers, but the headline \"anti-aging\" claim remains unproven in people.",
+    faqs: [
+      { q: "Does drinking red wine give me the same benefit?", a: "No — the concentrations studied in research are far higher than what's in a glass of wine, and alcohol carries its own health risks that outweigh any resveratrol content." },
+      { q: "Is this related to NMN/NAD+ supplements?", a: "They're often discussed together in the longevity-supplement space and are both tied to sirtuin/cellular-aging research, but they're chemically distinct compounds with separate (and both still preliminary) evidence bases." }
+    ]
+  },
+  {
+    id: "greentea",
+    name: "Green Tea Extract (EGCG)",
+    tag: "Catechin polyphenol",
+    evidence: "early",
+    evidenceLabel: "Modest evidence",
+    kind: "supplement",
+    whatItIs: "A concentrated extract of catechins (notably EGCG) from green tea leaves, providing a much higher dose than you'd get from drinking tea.",
+    whatItDoes: "Proposed to modestly increase energy expenditure and fat oxidation, often combined with its naturally occurring caffeine content for a synergistic effect.",
+    benefits: [
+      "Meta-analyses show a small but measurable increase in calorie burn and modest fat loss, mostly in combination with caffeine",
+      "Antioxidant properties from catechins are well-documented in lab research",
+      "Widely available and generally well-tolerated at food-equivalent doses"
+    ],
+    risks: [
+      "Concentrated extracts (unlike brewed tea) have been linked to rare but serious liver toxicity cases, especially on an empty stomach or at high doses",
+      "Effect sizes for fat loss are small — this isn't a substitute for diet and training, just a modest addition on top of them",
+      "Caffeine content can cause jitteriness or affect sleep if taken later in the day"
+    ],
+    research: "Modest, real evidence exists from meta-analyses of human trials, but the effect size is small — think a minor addition to a solid diet and training plan, not a meaningful fat-loss driver on its own.",
+    faqs: [
+      { q: "Is drinking green tea the same as taking the extract?", a: "No — extracts deliver a much more concentrated dose of catechins than brewed tea, which is both why they show more measurable effects in trials and why the rare liver-related safety concerns are specific to concentrated extracts, not the beverage." },
+      { q: "Does it work without caffeine?", a: "Most of the positive fat-oxidation research used EGCG combined with caffeine; decaffeinated extract alone has less supporting evidence." }
+    ]
+  },
+  {
+    id: "glucomannan",
+    name: "Glucomannan",
+    tag: "Soluble dietary fiber",
+    evidence: "clinical",
+    evidenceLabel: "Modest, consistent clinical evidence",
+    kind: "supplement",
+    whatItIs: "A soluble fiber derived from the konjac root, which absorbs water and expands significantly in the stomach.",
+    whatItDoes: "Increases feelings of fullness by physically expanding and slowing stomach emptying, which is the mechanism behind its use as a weight-management aid.",
+    benefits: [
+      "A number of randomized trials show modest weight loss compared to placebo, particularly when taken before meals with water",
+      "As a fiber, it may also support healthy cholesterol levels and digestive regularity",
+      "Non-stimulant mechanism, unlike caffeine-based fat-loss supplements"
+    ],
+    risks: [
+      "Must be taken with adequate water — it can expand before reaching the stomach and pose a choking/blockage risk if taken as a dry pill without enough liquid, particularly in capsule form",
+      "Can cause bloating, gas, or soft stools, especially when starting",
+      "Can interact with the absorption timing of some oral medications, so it's often recommended to take it separately from other pills"
+    ],
+    research: "One of the more consistently supported fiber supplements for modest weight-management benefit, with a clear, well-understood mechanism (satiety and slowed gastric emptying) backed by multiple human trials — modest effect size, but genuine.",
+    faqs: [
+      { q: "How much water do I actually need?", a: "Product labels typically recommend at least 8 ounces of water per dose — this isn't optional given the choking-risk profile of a fiber that expands significantly in volume." },
+      { q: "Will it work without changing my diet?", a: "The trial evidence is for glucomannan as an addition to — not a replacement for — a calorie-appropriate diet; it primarily helps by supporting satiety within that context." }
+    ]
+  }
+];
+
+const ALL_ENTRIES = PEPTIDES.concat(SUPPLEMENTS);
+
 /* ---------------- tab navigation ---------------- */
 
 const TAB_IDS = ["home","survey","glossary","vendors"];
@@ -1406,13 +2015,16 @@ function showResults(){
       const el = document.createElement("div");
       el.className = "protocol";
       const links = (p.glossaryIds || []).map(gid => {
-        const entry = PEPTIDES.find(x => x.id === gid);
+        const entry = ALL_ENTRIES.find(x => x.id === gid);
         return entry ? `<button type="button" class="glossary-link" onclick="openGlossaryEntry('${gid}')">Full profile: ${entry.name} →</button>` : "";
       }).join("");
       el.innerHTML = `
         <div class="protocol-head">
           <div class="protocol-name">${p.name}</div>
-          <div class="evidence ${p.evidence}">${p.evidenceLabel}</div>
+          <div class="protocol-badges">
+            <span class="kind-badge">${p.kind === "supplement" ? "Supplement" : "Peptide"}</span>
+            <span class="evidence ${p.evidence}">${p.evidenceLabel}</span>
+          </div>
         </div>
         <div class="protocol-tag">${p.tag}</div>
         <p>${p.text}</p>
@@ -1438,9 +2050,8 @@ function showResults(){
 
 /* ---------------- glossary ---------------- */
 
-function renderGlossary(){
-  const container = document.getElementById("glossaryList");
-  container.innerHTML = PEPTIDES.map(p => `
+function renderGlossaryItem(p){
+  return `
     <div class="acc-item" id="acc-${p.id}" data-search="${(p.name + " " + p.tag).toLowerCase()}">
       <button type="button" class="acc-header" onclick="toggleAccordion('${p.id}')" aria-expanded="false">
         <span class="acc-header-main">
@@ -1479,7 +2090,21 @@ function renderGlossary(){
         </div></div>
       </div>
     </div>
-  `).join("");
+  `;
+}
+
+function renderGlossary(){
+  const container = document.getElementById("glossaryList");
+  container.innerHTML = `
+    <div class="glossary-group" id="glossaryGroup-peptide">
+      <div class="goal-group-title glossary-group-title">Peptides</div>
+      ${PEPTIDES.map(renderGlossaryItem).join("")}
+    </div>
+    <div class="glossary-group" id="glossaryGroup-supplement">
+      <div class="goal-group-title glossary-group-title">Supplements</div>
+      ${SUPPLEMENTS.map(renderGlossaryItem).join("")}
+    </div>
+  `;
 }
 
 function toggleAccordion(id){
@@ -1506,13 +2131,19 @@ function openGlossaryEntry(id){
 
 function filterGlossary(){
   const q = document.getElementById("glossarySearch").value.trim().toLowerCase();
-  const items = [...document.querySelectorAll(".acc-item")];
   let visibleCount = 0;
-  items.forEach(item => {
-    const match = !q || item.dataset.search.includes(q);
-    item.style.display = match ? "" : "none";
-    if(match) visibleCount++;
+
+  [...document.querySelectorAll(".glossary-group")].forEach(group => {
+    let groupVisible = 0;
+    [...group.querySelectorAll(".acc-item")].forEach(item => {
+      const match = !q || item.dataset.search.includes(q);
+      item.style.display = match ? "" : "none";
+      if(match) groupVisible++;
+    });
+    group.style.display = groupVisible === 0 ? "none" : "";
+    visibleCount += groupVisible;
   });
+
   document.getElementById("glossaryEmpty").style.display = visibleCount === 0 ? "block" : "none";
 }
 
