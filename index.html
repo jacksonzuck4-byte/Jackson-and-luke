@@ -337,6 +337,19 @@
 
   .restart-row{ display:flex; gap: 12px; margin-top: 32px; }
 
+  /* research panel */
+  .research-panel{ margin-top: 44px; padding-top: 24px; border-top: 1px solid var(--line); }
+  .research-panel .panel-label{ font-family: var(--mono); font-size: 12px; color: var(--ink-soft); margin-bottom: 10px; }
+  .research-turn{ margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
+  .research-turn:first-child{ margin-top: 26px; padding-top: 0; border-top: none; }
+  .research-q{ font-family: var(--mono); font-size: 12px; color: var(--accent); margin-bottom: 8px; }
+  .research-a{ font-size: 15px; color: var(--ink); white-space: pre-wrap; margin: 0 0 12px; }
+  .research-cites{ display: flex; flex-direction: column; gap: 5px; }
+  .research-cites a{ font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: none; word-break: break-word; }
+  .research-cites a:hover{ text-decoration: underline; }
+  .research-error{ font-size: 13px; color: var(--warn); }
+  .research-loading{ font-size: 13px; color: var(--ink-soft); font-family: var(--mono); }
+
   @media (max-width: 480px){
     .protocol-head{ flex-direction:column; align-items:flex-start; gap:6px; }
   }
@@ -473,6 +486,16 @@
       <strong>Not medical advice</strong>
       <p>This tool summarizes published and preclinical research to help you have a more informed conversation with a licensed healthcare provider. It does not diagnose, treat, or prescribe, and it is not a substitute for professional medical care.</p>
       <p>Peptide products vary widely in purity and regulatory status. Sourcing, legality, and appropriate use depend on your location and health history — always confirm with a licensed provider before starting anything, especially anything flagged above.</p>
+    </div>
+
+    <div class="research-panel" id="researchPanel">
+      <div class="panel-label">Have a follow-up question?</div>
+      <p class="q-help" style="margin-bottom:14px;">Ask anything about what you just read. We'll search the current web and cite what we find — this doesn't replace your provider's judgment.</p>
+      <textarea class="goal-input" id="researchInput" style="min-height:80px;" placeholder="e.g. Is there recent human trial data on BPC-157 for tendon injuries?"></textarea>
+      <div class="analyze-row">
+        <button class="cta" id="researchBtn" onclick="askResearch()">Ask</button>
+      </div>
+      <div id="researchThread"></div>
     </div>
 
     <div class="restart-row">
@@ -661,7 +684,7 @@ const ACTIVITY = [
 
 /* ---------------- state ---------------- */
 
-let state = { goalText: "", goals: [], experience: null, activity: null, health: {} };
+let state = { goalText: "", goals: [], experience: null, activity: null, health: {}, researchResponseId: null };
 let currentScreen = 0;
 const screenIds = ["screen-hero","screen-1","screen-2","screen-3","screen-4","screen-results"];
 
@@ -757,7 +780,7 @@ function goTo(n){
 }
 
 function restart(){
-  state = { goalText: "", goals: [], experience: null, activity: null, health: {} };
+  state = { goalText: "", goals: [], experience: null, activity: null, health: {}, researchResponseId: null };
   document.getElementById("goalInput").value = "";
   document.getElementById("chipPanel").classList.remove("visible");
   document.getElementById("next1").disabled = true;
@@ -767,7 +790,66 @@ function restart(){
     document.getElementById(id).value = "";
   });
   [...document.querySelectorAll(".choice")].forEach(c => c.classList.remove("selected"));
+  document.getElementById("researchThread").innerHTML = "";
+  document.getElementById("researchInput").value = "";
   goTo(0);
+}
+
+/* ---------------- research (Perplexity Agent API) ---------------- */
+
+function escapeHtml(str){
+  return String(str ?? "").replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+}
+
+async function askResearch(){
+  const input = document.getElementById("researchInput");
+  const question = input.value.trim();
+  if(!question) return;
+
+  const btn = document.getElementById("researchBtn");
+  const thread = document.getElementById("researchThread");
+  btn.disabled = true;
+  input.value = "";
+
+  const turn = document.createElement("div");
+  turn.className = "research-turn";
+  turn.innerHTML = `<div class="research-q">${escapeHtml(question)}</div><div class="research-loading">Searching the web…</div>`;
+  thread.appendChild(turn);
+  turn.scrollIntoView({ behavior: "smooth", block: "nearest" });
+
+  try {
+    const selectedGoalLabels = GOALS.filter(g => state.goals.includes(g.id)).map(g => g.label);
+    const res = await fetch("/api/research", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        question,
+        goalContext: selectedGoalLabels,
+        previousResponseId: state.researchResponseId || undefined
+      })
+    });
+    const data = await res.json();
+
+    if(!res.ok){
+      const message = res.status === 429
+        ? "We're getting rate-limited right now — give it a moment and try again."
+        : (data.message || "Something went wrong answering that.");
+      turn.innerHTML = `<div class="research-q">${escapeHtml(question)}</div><div class="research-error">${escapeHtml(message)}</div>`;
+      return;
+    }
+
+    state.researchResponseId = data.id;
+    const citesHtml = (data.citations || []).length
+      ? `<div class="research-cites">${data.citations.map(c =>
+          `<a href="${escapeHtml(c.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(c.title)}</a>`
+        ).join("")}</div>`
+      : "";
+    turn.innerHTML = `<div class="research-q">${escapeHtml(question)}</div><p class="research-a">${escapeHtml(data.answer)}</p>${citesHtml}`;
+  } catch (err) {
+    turn.innerHTML = `<div class="research-q">${escapeHtml(question)}</div><div class="research-error">Couldn't reach the server — make sure it's running.</div>`;
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 /* ---------------- results ---------------- */
