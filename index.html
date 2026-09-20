@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Protocol — Goal-based peptide research matching</title>
+<title>Protocol — Peptide research &amp; goal matching</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
@@ -48,9 +48,15 @@
     display:flex;
     align-items:center;
     justify-content:space-between;
+    flex-wrap: wrap;
+    gap: 14px;
     max-width: 720px;
     margin: 0 auto;
-    padding: 28px 24px 0;
+    padding: 24px 24px 0;
+    position: sticky;
+    top: 0;
+    background: var(--paper);
+    z-index: 10;
   }
   .mark{
     font-family: var(--mono);
@@ -67,27 +73,59 @@
     background: var(--accent);
     display:inline-block;
   }
+
+  /* tab navigation */
+  .tabnav{
+    display:flex;
+    gap: 4px;
+    background: var(--paper-dim);
+    border-radius: 999px;
+    padding: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab-btn{
+    appearance:none;
+    border:none;
+    background:transparent;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--ink-soft);
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor:pointer;
+    white-space: nowrap;
+  }
+  .tab-btn:hover{ color: var(--ink); }
+  .tab-btn.active{ background: var(--ink); color: var(--paper); }
+  .tab-btn:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .tab-panel{ display:none; padding-top: 8px; }
+  .tab-panel.active{ display:block; }
+
   .step-indicator{
     font-family: var(--mono);
     font-size: 12px;
     color: var(--ink-soft);
+    margin: 20px 0 0;
   }
 
-  .hero{ padding: 56px 0 40px; }
+  .hero{ padding: 40px 0 40px; }
   .hero h1{
     font-family: var(--serif);
     font-weight: 500;
-    font-size: clamp(34px, 6vw, 52px);
-    line-height: 1.08;
+    font-size: clamp(30px, 6vw, 46px);
+    line-height: 1.1;
     letter-spacing: -0.01em;
-    margin: 0 0 20px;
-    max-width: 11ch;
+    margin: 0 0 18px;
+    max-width: 14ch;
   }
   .hero p{
-    font-size: 17px;
-    max-width: 46ch;
+    font-size: 16px;
+    max-width: 50ch;
     color: var(--ink-soft);
-    margin: 0 0 32px;
+    margin: 0 0 28px;
   }
   .cta{
     appearance:none;
@@ -113,6 +151,7 @@
     border: 1px solid var(--line);
   }
   .cta.ghost:hover{ background: var(--paper-dim); }
+  .cta.small{ padding: 10px 18px; font-size: 13px; }
 
   .q-label{
     font-family: var(--mono);
@@ -320,6 +359,11 @@
   .protocol .meta-row{ display:flex; gap: 22px; margin-top: 14px; flex-wrap: wrap; }
   .meta-item dt{ font-family: var(--mono); font-size: 11px; color: var(--ink-soft); margin-bottom: 3px; }
   .meta-item dd{ margin:0; font-size: 13px; }
+  .protocol-links{ display:flex; flex-wrap:wrap; gap:16px; margin-top:14px; }
+  .glossary-link{
+    appearance:none; background:none; border:none; padding:0; cursor:pointer;
+    font-family: var(--mono); font-size:12px; color: var(--accent); text-decoration: underline;
+  }
 
   .disclaimer-block{
     margin-top: 44px;
@@ -337,21 +381,103 @@
 
   .restart-row{ display:flex; gap: 12px; margin-top: 32px; }
 
-  /* research panel */
-  .research-panel{ margin-top: 44px; padding-top: 24px; border-top: 1px solid var(--line); }
-  .research-panel .panel-label{ font-family: var(--mono); font-size: 12px; color: var(--ink-soft); margin-bottom: 10px; }
-  .research-turn{ margin-top: 22px; padding-top: 18px; border-top: 1px solid var(--line); }
-  .research-turn:first-child{ margin-top: 26px; padding-top: 0; border-top: none; }
-  .research-q{ font-family: var(--mono); font-size: 12px; color: var(--accent); margin-bottom: 8px; }
-  .research-a{ font-size: 15px; color: var(--ink); white-space: pre-wrap; margin: 0 0 12px; }
-  .research-cites{ display: flex; flex-direction: column; gap: 5px; }
-  .research-cites a{ font-family: var(--mono); font-size: 12px; color: var(--accent); text-decoration: none; word-break: break-word; }
-  .research-cites a:hover{ text-decoration: underline; }
-  .research-error{ font-size: 13px; color: var(--warn); }
-  .research-loading{ font-size: 13px; color: var(--ink-soft); font-family: var(--mono); }
+  /* ---------------- home tab ---------------- */
+  .guide-grid{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+    gap: 16px;
+    margin-top: 12px;
+  }
+  .guide-card{
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 22px;
+    background: #fff;
+    display:flex;
+    flex-direction:column;
+    align-items:flex-start;
+  }
+  .guide-card-label{ font-family: var(--mono); font-size: 12px; color: var(--accent); margin-bottom: 10px; }
+  .guide-card h3{ font-family: var(--serif); font-size: 20px; font-weight:500; margin: 0 0 8px; }
+  .guide-card p{ font-size: 14px; color: var(--ink-soft); margin: 0 0 18px; flex:1; }
+
+  /* ---------------- glossary tab ---------------- */
+  .glossary-search{
+    width:100%;
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:3px;
+    padding: 13px 14px;
+    font-family: var(--sans);
+    font-size: 15px;
+    color: var(--ink);
+    margin: 8px 0 30px;
+  }
+  .glossary-search::placeholder{ color:#9A9587; }
+  .glossary-empty{ font-size: 14px; color: var(--ink-soft); padding: 18px 0; display:none; }
+
+  .acc-item{ border-bottom: 1px solid var(--line); }
+  .acc-item:first-of-type{ border-top: 1px solid var(--line); }
+  .acc-header{
+    width:100%;
+    appearance:none;
+    background:none;
+    border:none;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap: 14px;
+    padding: 18px 0;
+    text-align:left;
+    font-family: var(--sans);
+  }
+  .acc-header-main{ flex:1; display:flex; flex-direction:column; gap:3px; min-width:0; }
+  .acc-name{ font-family: var(--serif); font-size: 19px; font-weight:500; color: var(--ink); }
+  .acc-tag{ font-family: var(--mono); font-size: 12px; color: var(--ink-soft); }
+  .acc-chevron{ font-size: 14px; color: var(--ink-soft); transition: transform 0.2s ease; flex:none; }
+  .acc-item.open .acc-chevron{ transform: rotate(180deg); }
+
+  .acc-body-wrap{ display:grid; grid-template-rows: 0fr; transition: grid-template-rows 0.25s ease; }
+  .acc-item.open .acc-body-wrap{ grid-template-rows: 1fr; }
+  .acc-body{ overflow:hidden; }
+  .acc-body-inner{ padding-bottom: 26px; }
+
+  .acc-section{ margin-bottom: 18px; }
+  .acc-section:last-child{ margin-bottom:0; }
+  .acc-section-title{
+    font-family: var(--mono); font-size: 11px; text-transform:uppercase; letter-spacing:0.04em;
+    color: var(--ink-soft); margin-bottom: 8px;
+  }
+  .acc-section p{ font-size:14px; color: var(--ink-soft); margin:0; }
+  .acc-list{ margin:0; padding-left:18px; }
+  .acc-list li{ font-size:14px; color: var(--ink-soft); margin-bottom:6px; }
+  .acc-list li:last-child{ margin-bottom:0; }
+
+  .faq-item{ margin-bottom: 14px; }
+  .faq-item:last-child{ margin-bottom:0; }
+  .faq-q{ font-size:14px; font-weight:600; color: var(--ink); margin-bottom:4px; }
+  .faq-a{ font-size:14px; color: var(--ink-soft); margin:0; }
+
+  /* ---------------- vendors tab ---------------- */
+  .checklist{ margin: 0 0 8px; padding-left: 20px; }
+  .checklist li{ font-size: 14px; color: var(--ink-soft); margin-bottom: 10px; }
+  .checklist li strong{ color: var(--ink); }
+
+  .vendor-form{
+    display:flex; flex-direction:column; gap:14px; margin: 30px 0 20px;
+    padding: 22px; background:#fff; border:1px solid var(--line); border-radius:4px;
+  }
+  .vendor-list{ margin-top: 8px; }
+  .vendor-card{ border:1px solid var(--line); border-radius:4px; padding:16px 18px; margin-bottom:12px; background:#fff; }
+  .vendor-card-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:12px; }
+  .vendor-name{ font-family: var(--serif); font-size:17px; font-weight:500; }
+  .vendor-url{ font-family: var(--mono); font-size:12px; color: var(--accent); word-break:break-word; display:block; margin-top:4px; text-decoration:none; }
+  .vendor-url:hover{ text-decoration:underline; }
+  .vendor-notes{ font-size:13px; color: var(--ink-soft); margin: 8px 0 0; }
 
   @media (max-width: 480px){
     .protocol-head{ flex-direction:column; align-items:flex-start; gap:6px; }
+    .vendor-card-head{ flex-direction: column; }
   }
 </style>
 </head>
@@ -359,155 +485,253 @@
 
 <div class="topbar">
   <div class="mark">PROTOCOL</div>
-  <div class="step-indicator" id="stepIndicator"></div>
+  <nav class="tabnav" aria-label="Main sections">
+    <button type="button" class="tab-btn active" data-tab="home" onclick="switchTab('home')">Home</button>
+    <button type="button" class="tab-btn" data-tab="survey" onclick="switchTab('survey')">Survey</button>
+    <button type="button" class="tab-btn" data-tab="glossary" onclick="switchTab('glossary')">Glossary</button>
+    <button type="button" class="tab-btn" data-tab="vendors" onclick="switchTab('vendors')">Vendors</button>
+  </nav>
 </div>
 
 <div class="wrap">
 
-  <!-- Screen 0: hero -->
-  <section class="card active" id="screen-hero">
+  <!-- ============== HOME TAB ============== -->
+  <section class="tab-panel active" id="tab-home">
     <div class="hero">
-      <h1>Turn your goal into a research-backed protocol.</h1>
-      <p>Tell us what you're working on in your own words. We'll match it against published research and hand back a starting protocol to review with a provider — not a guess, not a generic stack.</p>
-      <button class="cta" onclick="goTo(1)">Start my match</button>
+      <h1>Research peptides without the guesswork.</h1>
+      <p>Protocol turns a goal into a research-backed starting point, explains the peptides behind it in plain language, and gives you a place to track your own sourcing research — all before you talk to a provider.</p>
+    </div>
+
+    <div class="guide-grid">
+      <div class="guide-card">
+        <div class="guide-card-label">01</div>
+        <h3>Take the survey</h3>
+        <p>Describe your goal in your own words, answer a few quick questions, and get a starting protocol matched to published and preclinical research.</p>
+        <button type="button" class="cta ghost" onclick="switchTab('survey')">Start the survey →</button>
+      </div>
+      <div class="guide-card">
+        <div class="guide-card-label">02</div>
+        <h3>Read the glossary</h3>
+        <p>Every peptide the survey can suggest, explained: what it is, what it does, benefits, risks, and what the research actually shows. Click any entry to expand it.</p>
+        <button type="button" class="cta ghost" onclick="switchTab('glossary')">Browse the glossary →</button>
+      </div>
+      <div class="guide-card">
+        <div class="guide-card-label">03</div>
+        <h3>Track your sourcing</h3>
+        <p>We don't hand out a vendor list — the market moves fast and getting that wrong is genuinely dangerous. Instead: a checklist for vetting a source yourself, and a private notebook to track what you find.</p>
+        <button type="button" class="cta ghost" onclick="switchTab('vendors')">Open vendor tracker →</button>
+      </div>
+    </div>
+
+    <div class="disclaimer-block" style="margin-top:52px;">
+      <strong>Before you go further</strong>
+      <p>Nothing on this site is medical advice, a diagnosis, or a prescription. Most peptides discussed here are not FDA-approved for the uses people commonly discuss them for, and product purity/legality vary by source and location. Talk to a licensed provider before starting anything.</p>
     </div>
   </section>
 
-  <!-- Screen 1: goal (free text + keyword match) -->
-  <section class="card" id="screen-1">
-    <div style="padding-top:40px;">
-      <div class="q-label">01 — Your goal</div>
-      <h2 class="q-title">What are you trying to work on?</h2>
-      <p class="q-help">Describe it however you'd say it out loud. For example: "I keep tweaking my knee and want to recover faster" or "trying to sleep deeper and lose some fat."</p>
+  <!-- ============== SURVEY TAB ============== -->
+  <section class="tab-panel" id="tab-survey">
+    <div class="step-indicator" id="stepIndicator"></div>
 
-      <textarea class="goal-input" id="goalInput" placeholder="Type your goal here..."></textarea>
+    <!-- Screen 0: hero -->
+    <section class="card active" id="screen-hero">
+      <div class="hero" style="padding-top:20px;">
+        <h1 style="max-width:12ch;">Ready when you are.</h1>
+        <p>Answer a few quick questions and we'll match your goal against published research to hand back a starting protocol — not a guess, not a generic stack.</p>
+        <button type="button" class="cta" onclick="goTo(1)">Start my match</button>
+      </div>
+    </section>
 
-      <div class="analyze-row">
-        <button class="cta" id="analyzeBtn" onclick="analyzeGoals()">Analyze my goal</button>
+    <!-- Screen 1: goal (free text + keyword match) -->
+    <section class="card" id="screen-1">
+      <div style="padding-top:20px;">
+        <div class="q-label">01 — Your goal</div>
+        <h2 class="q-title">What are you trying to work on?</h2>
+        <p class="q-help">Describe it however you'd say it out loud. For example: "I keep tweaking my knee and want to recover faster" or "trying to sleep deeper and lose some fat."</p>
+
+        <textarea class="goal-input" id="goalInput" placeholder="Type your goal here..."></textarea>
+
+        <div class="analyze-row">
+          <button type="button" class="cta" id="analyzeBtn" onclick="analyzeGoals()">Analyze my goal</button>
+        </div>
+
+        <div class="chip-panel" id="chipPanel">
+          <div class="panel-label">Here's what we picked up — tap to adjust</div>
+          <div class="chip-row" id="chipRow"></div>
+          <div class="empty-match-note" id="emptyMatchNote">We didn't catch a clear match in your text — pick one or more areas below so we can build your protocol.</div>
+        </div>
+
+        <div class="nav-row">
+          <button type="button" class="back-link" onclick="goTo(0)">← Back</button>
+          <button type="button" class="cta" id="next1" onclick="goTo(2)" disabled>Continue</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 2: experience -->
+    <section class="card" id="screen-2">
+      <div style="padding-top:20px;">
+        <div class="q-label">02 — Experience level</div>
+        <h2 class="q-title">Have you used peptides or supplements like this before?</h2>
+        <p class="q-help">This helps us calibrate how much background to give you.</p>
+        <div class="choices" id="expChoices"></div>
+        <div class="nav-row">
+          <button type="button" class="back-link" onclick="goTo(1)">← Back</button>
+          <button type="button" class="cta" id="next2" onclick="goTo(3)" disabled>Continue</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 3: activity level -->
+    <section class="card" id="screen-3">
+      <div style="padding-top:20px;">
+        <div class="q-label">03 — Activity level</div>
+        <h2 class="q-title">How many days a week do you work out?</h2>
+        <p class="q-help">Workout means exerting your body above resting/homeostatic levels — lifting, running, sports, structured training, etc.</p>
+        <div class="choices" id="activityChoices"></div>
+        <div class="nav-row">
+          <button type="button" class="back-link" onclick="goTo(2)">← Back</button>
+          <button type="button" class="cta" id="next3" onclick="goTo(4)" disabled>Continue</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 4: health details -->
+    <section class="card" id="screen-4">
+      <div style="padding-top:20px;">
+        <div class="q-label">04 — Health context</div>
+        <h2 class="q-title">A few things a provider would want to know</h2>
+        <p class="q-help">Answer honestly and in your own words — write "none" if something doesn't apply. This stays on your device, not shared anywhere.</p>
+
+        <div class="field">
+          <label for="fieldConditions">Medical conditions</label>
+          <input type="text" id="fieldConditions" placeholder="e.g. none, or type 2 diabetes, thyroid condition...">
+        </div>
+
+        <div class="field">
+          <label for="fieldMeds">Medications you currently take</label>
+          <input type="text" id="fieldMeds" placeholder="e.g. none, or list medication names">
+        </div>
+
+        <div class="field">
+          <label for="fieldPregnant">Pregnant, nursing, or trying to conceive</label>
+          <input type="text" id="fieldPregnant" placeholder="e.g. no / not applicable / yes">
+        </div>
+
+        <div class="field">
+          <label for="fieldDrugs">Recreational or non-prescribed drug use</label>
+          <input type="text" id="fieldDrugs" placeholder="e.g. none">
+        </div>
+
+        <div class="field">
+          <label for="fieldAlcohol">Alcohol consumption</label>
+          <input type="text" id="fieldAlcohol" placeholder="e.g. none, occasional, a few drinks a week">
+        </div>
+
+        <div class="nav-row">
+          <button type="button" class="back-link" onclick="goTo(3)">← Back</button>
+          <button type="button" class="cta" onclick="showResults()">See my protocol</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Screen 5: results -->
+    <section class="card" id="screen-results">
+      <div class="results-head">
+        <div class="q-label">Your match</div>
+        <h2 id="resultsTitle">Protocol suggestion</h2>
+        <p id="resultsSub"></p>
       </div>
 
-      <div class="chip-panel" id="chipPanel">
-        <div class="panel-label">Here's what we picked up — tap to adjust</div>
-        <div class="chip-row" id="chipRow"></div>
-        <div class="empty-match-note" id="emptyMatchNote">We didn't catch a clear match in your text — pick one or more areas below so we can build your protocol.</div>
+      <div class="banner" id="conditionalBanner" style="display:none;">
+        <strong>Flagged for provider review</strong>
+        <span id="conditionalBannerText"></span>
+        <ul id="conditionalBannerList"></ul>
       </div>
 
-      <div class="nav-row">
-        <button class="back-link" onclick="goTo(0)">← Back</button>
-        <button class="cta" id="next1" onclick="goTo(2)" disabled>Continue</button>
+      <div id="protocolList"></div>
+
+      <div class="disclaimer-block">
+        <strong>Not medical advice</strong>
+        <p>This tool summarizes published and preclinical research to help you have a more informed conversation with a licensed healthcare provider. It does not diagnose, treat, or prescribe, and it is not a substitute for professional medical care.</p>
+        <p>Peptide products vary widely in purity and regulatory status. Sourcing, legality, and appropriate use depend on your location and health history — always confirm with a licensed provider before starting anything, especially anything flagged above.</p>
       </div>
-    </div>
+
+      <div class="restart-row">
+        <button type="button" class="cta ghost" onclick="goTo(1)">Adjust my answers</button>
+        <button type="button" class="cta ghost" onclick="restart()">Start over</button>
+      </div>
+    </section>
   </section>
 
-  <!-- Screen 2: experience -->
-  <section class="card" id="screen-2">
-    <div style="padding-top:40px;">
-      <div class="q-label">02 — Experience level</div>
-      <h2 class="q-title">Have you used peptides or supplements like this before?</h2>
-      <p class="q-help">This helps us calibrate how much background to give you.</p>
-      <div class="choices" id="expChoices"></div>
-      <div class="nav-row">
-        <button class="back-link" onclick="goTo(1)">← Back</button>
-        <button class="cta" id="next2" onclick="goTo(3)" disabled>Continue</button>
-      </div>
+  <!-- ============== GLOSSARY TAB ============== -->
+  <section class="tab-panel" id="tab-glossary">
+    <div class="hero" style="padding-top:20px; padding-bottom:8px;">
+      <h1 style="max-width:16ch; font-size:clamp(26px,5vw,36px);">Peptide glossary</h1>
+      <p style="margin-bottom:16px;">Every peptide the survey can suggest, in plain language. Evidence levels reflect how much of the research is human/clinical versus animal/preclinical — click an entry to expand it.</p>
     </div>
+
+    <input type="text" class="glossary-search" id="glossarySearch" placeholder="Search by name (e.g. BPC-157, sleep, GHRH)..." oninput="filterGlossary()">
+
+    <p class="glossary-empty" id="glossaryEmpty">No entries match that search.</p>
+    <div id="glossaryList"></div>
   </section>
 
-  <!-- Screen 3: activity level -->
-  <section class="card" id="screen-3">
-    <div style="padding-top:40px;">
-      <div class="q-label">03 — Activity level</div>
-      <h2 class="q-title">How many days a week do you work out?</h2>
-      <p class="q-help">Workout means exerting your body above resting/homeostatic levels — lifting, running, sports, structured training, etc.</p>
-      <div class="choices" id="activityChoices"></div>
-      <div class="nav-row">
-        <button class="back-link" onclick="goTo(2)">← Back</button>
-        <button class="cta" id="next3" onclick="goTo(4)" disabled>Continue</button>
-      </div>
+  <!-- ============== VENDORS TAB ============== -->
+  <section class="tab-panel" id="tab-vendors">
+    <div class="hero" style="padding-top:20px; padding-bottom:0;">
+      <h1 style="max-width:16ch; font-size:clamp(26px,5vw,36px);">Sourcing &amp; vendors</h1>
     </div>
-  </section>
-
-  <!-- Screen 4: health details -->
-  <section class="card" id="screen-4">
-    <div style="padding-top:40px;">
-      <div class="q-label">04 — Health context</div>
-      <h2 class="q-title">A few things a provider would want to know</h2>
-      <p class="q-help">Answer honestly and in your own words — write "none" if something doesn't apply. This stays with your protocol, not shared anywhere.</p>
-
-      <div class="field">
-        <label for="fieldConditions">Medical conditions</label>
-        <input type="text" id="fieldConditions" placeholder="e.g. none, or type 2 diabetes, thyroid condition...">
-      </div>
-
-      <div class="field">
-        <label for="fieldMeds">Medications you currently take</label>
-        <input type="text" id="fieldMeds" placeholder="e.g. none, or list medication names">
-      </div>
-
-      <div class="field">
-        <label for="fieldPregnant">Pregnant, nursing, or trying to conceive</label>
-        <input type="text" id="fieldPregnant" placeholder="e.g. no / not applicable / yes">
-      </div>
-
-      <div class="field">
-        <label for="fieldDrugs">Recreational or non-prescribed drug use</label>
-        <input type="text" id="fieldDrugs" placeholder="e.g. none">
-      </div>
-
-      <div class="field">
-        <label for="fieldAlcohol">Alcohol consumption</label>
-        <input type="text" id="fieldAlcohol" placeholder="e.g. none, occasional, a few drinks a week">
-      </div>
-
-      <div class="nav-row">
-        <button class="back-link" onclick="goTo(3)">← Back</button>
-        <button class="cta" onclick="showResults()">See my protocol</button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Screen 5: results -->
-  <section class="card" id="screen-results">
-    <div class="results-head">
-      <div class="q-label">Your match</div>
-      <h2 id="resultsTitle">Protocol suggestion</h2>
-      <p id="resultsSub"></p>
-    </div>
-
-    <div class="banner" id="conditionalBanner" style="display:none;">
-      <strong>Flagged for provider review</strong>
-      <span id="conditionalBannerText"></span>
-      <ul id="conditionalBannerList"></ul>
-    </div>
-
-    <div id="protocolList"></div>
 
     <div class="disclaimer-block">
-      <strong>Not medical advice</strong>
-      <p>This tool summarizes published and preclinical research to help you have a more informed conversation with a licensed healthcare provider. It does not diagnose, treat, or prescribe, and it is not a substitute for professional medical care.</p>
-      <p>Peptide products vary widely in purity and regulatory status. Sourcing, legality, and appropriate use depend on your location and health history — always confirm with a licensed provider before starting anything, especially anything flagged above.</p>
+      <strong>Read this first</strong>
+      <p>This is not medical or legal advice, and it is not a recommendation to purchase or use any peptide. We do not list, promote, or endorse any specific vendor, website, or seller — the ones you find, evaluate, and choose to use are entirely your own decision and responsibility.</p>
+      <p>Most peptides sold online are labeled "for research use only" and are not approved by the FDA (or equivalent regulators) for human use. Purity, actual content, legality, and safety are not guaranteed by any seller's marketing claims. Buying, possessing, and using these products may carry legal and health risks that vary by where you live.</p>
     </div>
 
-    <div class="research-panel" id="researchPanel">
-      <div class="panel-label">Have a follow-up question?</div>
-      <p class="q-help" style="margin-bottom:14px;">Ask anything about what you just read. We'll search the current web and cite what we find — this doesn't replace your provider's judgment.</p>
-      <textarea class="goal-input" id="researchInput" style="min-height:80px;" placeholder="e.g. Is there recent human trial data on BPC-157 for tendon injuries?"></textarea>
-      <div class="analyze-row">
-        <button class="cta" id="researchBtn" onclick="askResearch()">Ask</button>
+    <div style="margin-top: 44px;">
+      <div class="q-label">Vetting checklist</div>
+      <h2 class="q-title">How to evaluate a source yourself</h2>
+      <p class="q-help">We deliberately don't maintain a "trusted vendor" list — the market shifts constantly, and a wrong recommendation here isn't a broken link, it's someone injecting an unverified substance. Use this checklist on any vendor you're considering instead.</p>
+
+      <ul class="checklist">
+        <li><strong>Third-party lab testing.</strong> Look for a Certificate of Analysis (COA) from an independent lab — not the vendor's own in-house test — ideally with HPLC or mass spectrometry results tied to the specific batch/lot number you'd receive, not a generic PDF reused across products.</li>
+        <li><strong>Batch-specific results, not stock photos.</strong> A real COA references a lot number that matches what ships to you. If every product shares one generic "test result" image, treat that as a red flag.</li>
+        <li><strong>Transparent business identity.</strong> A real company name, physical address, and contact information you can verify — not just a storefront with a contact form and no other footprint.</li>
+        <li><strong>Independent reputation.</strong> Look for a track record across sources you don't control the search for — independent forums, long-running community discussions, or review aggregators — rather than testimonials on the vendor's own site.</li>
+		<li><strong>No explicit medical claims.</strong> "Research use only" vendors making direct human-dosing or treatment claims are typically operating outside the labeling that keeps them in a legal gray area in the first place — that inconsistency is itself worth noting.</li>
+        <li><strong>Clear policies.</strong> A stated return/refund policy, secure checkout, and no requirement to pay by untraceable methods (e.g. wire transfer, crypto-only with no alternative, gift cards).</li>
+        <li><strong>Consistency over time.</strong> A vendor with years of consistent, verifiable testing and community track record is a different risk profile than one that's brand new or has recently changed names.</li>
+      </ul>
+    </div>
+
+    <div class="vendor-form">
+      <div class="q-label" style="margin-bottom:0;">Your notebook</div>
+      <p class="q-help" style="margin-bottom:0;">Track sources you're personally researching. This is saved only in this browser (not sent anywhere, not synced) — it's a private scratchpad, not a shared or verified list.</p>
+      <div class="field" style="margin-bottom:0;">
+        <label for="vendorName">Name</label>
+        <input type="text" id="vendorName" placeholder="e.g. a vendor you're currently vetting">
       </div>
-      <div id="researchThread"></div>
+      <div class="field" style="margin-bottom:0;">
+        <label for="vendorUrl">Website</label>
+        <input type="text" id="vendorUrl" placeholder="https://...">
+      </div>
+      <div class="field" style="margin-bottom:0;">
+        <label for="vendorNotes">Notes</label>
+        <input type="text" id="vendorNotes" placeholder="COA status, batch numbers, anything you want to remember">
+      </div>
+      <div class="analyze-row" style="margin-top:0;">
+        <button type="button" class="cta" onclick="addVendor()">Save to notebook</button>
+      </div>
     </div>
 
-    <div class="restart-row">
-      <button class="cta ghost" onclick="goTo(1)">Adjust my answers</button>
-      <button class="cta ghost" onclick="restart()">Start over</button>
-    </div>
+    <div class="vendor-list" id="vendorList"></div>
   </section>
 
 </div>
 
 <script>
-/* ---------------- data ---------------- */
+/* ---------------- data: survey goals & protocols ---------------- */
 
 const GOALS = [
   {
@@ -522,7 +746,8 @@ const GOALS = [
         evidenceLabel: "Mostly animal studies",
         text: "Studied largely in animal models for its role in tendon, ligament, and gut-lining repair. Human data is limited to small or informal reports, so it's best treated as an early-stage compound rather than an established therapy.",
         form: "Subcutaneous or oral",
-        cycle: "Provider-set, typically weeks"
+        cycle: "Provider-set, typically weeks",
+        glossaryIds: ["bpc157"]
       },
       {
         name: "TB-500 (Thymosin Beta-4 fragment)",
@@ -531,7 +756,8 @@ const GOALS = [
         evidenceLabel: "Mostly animal studies",
         text: "Investigated for its role in cell migration and tissue regeneration, often discussed alongside BPC-157 for soft-tissue recovery. Clinical trial data in humans is sparse.",
         form: "Subcutaneous",
-        cycle: "Provider-set"
+        cycle: "Provider-set",
+        glossaryIds: ["tb500"]
       }
     ]
   },
@@ -547,7 +773,8 @@ const GOALS = [
         evidenceLabel: "Early clinical",
         text: "This combination is designed to stimulate the body's own growth-hormone pulse rather than introducing exogenous HGH. Some clinical work exists on the individual mechanisms, though long-term outcome data specific to performance use is thin.",
         form: "Subcutaneous",
-        cycle: "Provider-set, often 5 days on / 2 off"
+        cycle: "Provider-set, often 5 days on / 2 off",
+        glossaryIds: ["cjc1295", "ipamorelin"]
       },
       {
         name: "Sermorelin",
@@ -556,7 +783,8 @@ const GOALS = [
         evidenceLabel: "Clinical history",
         text: "One of the more clinically established growth-hormone-releasing peptides, with a longer history of medical use for GH-related deficiency. Off-label performance use is common but not the studied indication.",
         form: "Subcutaneous",
-        cycle: "Provider-set, nightly protocols typical"
+        cycle: "Provider-set, nightly protocols typical",
+        glossaryIds: ["sermorelin"]
       }
     ]
   },
@@ -572,7 +800,8 @@ const GOALS = [
         evidenceLabel: "Mostly early/animal research",
         text: "Named for early research into delta-wave sleep, though modern evidence on reliably improving human sleep architecture is inconsistent. Often discussed more for its research history than a strong current evidence base.",
         form: "Subcutaneous",
-        cycle: "Provider-set"
+        cycle: "Provider-set",
+        glossaryIds: ["dsip"]
       }
     ]
   },
@@ -588,7 +817,8 @@ const GOALS = [
         evidenceLabel: "Early clinical (ex-Russia)",
         text: "Developed and studied in Russia, primarily investigated for neuroprotective and cognitive effects. Evidence base outside that research tradition is limited, and regulatory status varies by country.",
         form: "Intranasal",
-        cycle: "Provider-set"
+        cycle: "Provider-set",
+        glossaryIds: ["semax"]
       },
       {
         name: "Selank",
@@ -597,7 +827,8 @@ const GOALS = [
         evidenceLabel: "Early clinical (ex-Russia)",
         text: "Studied mainly for anxiolytic and mood-related effects alongside potential cognitive benefits. Same regional research base and evidence limitations as Semax.",
         form: "Intranasal",
-        cycle: "Provider-set"
+        cycle: "Provider-set",
+        glossaryIds: ["selank"]
       }
     ]
   },
@@ -613,7 +844,8 @@ const GOALS = [
         evidenceLabel: "Clinical (topical/derm)",
         text: "One of the better-studied peptides in dermatology, with published research on collagen signaling and wound healing, largely in topical form. Injectable use is less studied than topical.",
         form: "Topical or subcutaneous",
-        cycle: "Provider-set"
+        cycle: "Provider-set",
+        glossaryIds: ["ghkcu"]
       }
     ]
   },
@@ -629,7 +861,8 @@ const GOALS = [
         evidenceLabel: "Mostly animal/preclinical",
         text: "Studied primarily in Russian aging research for effects on telomerase activity and circadian regulation, mostly in animal models. Long-term human longevity outcomes have not been established.",
         form: "Subcutaneous",
-        cycle: "Provider-set, cyclical courses"
+        cycle: "Provider-set, cyclical courses",
+        glossaryIds: ["epitalon"]
       },
       {
         name: "Thymosin Alpha-1",
@@ -638,7 +871,8 @@ const GOALS = [
         evidenceLabel: "Approved in some countries",
         text: "Has an established clinical history for immune support in several countries, including use alongside other treatments. Evidence for general healthspan or anti-aging use specifically is much thinner than for its approved indications.",
         form: "Subcutaneous",
-        cycle: "Provider-set"
+        cycle: "Provider-set",
+        glossaryIds: ["thymosinalpha1"]
       }
     ]
   },
@@ -654,7 +888,8 @@ const GOALS = [
         evidenceLabel: "Clinically established",
         text: "Approved in some countries specifically for reducing visceral fat in a defined clinical population, giving it a stronger evidence base than most peptides on this list. Use outside that approved context is off-label.",
         form: "Subcutaneous",
-        cycle: "Provider-set, daily"
+        cycle: "Provider-set, daily",
+        glossaryIds: ["tesamorelin"]
       },
       {
         name: "AOD-9604",
@@ -663,7 +898,8 @@ const GOALS = [
         evidenceLabel: "Mostly early/animal research",
         text: "A fragment of growth hormone studied for its potential to influence fat metabolism without the broader effects of full-length HGH. Human trial data on meaningful fat-loss outcomes remains limited.",
         form: "Subcutaneous",
-        cycle: "Provider-set"
+        cycle: "Provider-set",
+        glossaryIds: ["aod9604"]
       }
     ]
   }
@@ -682,11 +918,315 @@ const ACTIVITY = [
   { id: "lot", label: "A lot", desc: "5+ days a week" }
 ];
 
-/* ---------------- state ---------------- */
+/* ---------------- data: glossary ---------------- */
 
-let state = { goalText: "", goals: [], experience: null, activity: null, health: {}, researchResponseId: null };
-let currentScreen = 0;
-const screenIds = ["screen-hero","screen-1","screen-2","screen-3","screen-4","screen-results"];
+const PEPTIDES = [
+  {
+    id: "bpc157",
+    name: "BPC-157",
+    tag: "Gastric pentadecapeptide",
+    evidence: "animal",
+    evidenceLabel: "Mostly animal studies",
+    whatItIs: "A synthetic peptide based on a fragment of a protective protein found in human gastric juice. It's sold as a \"research chemical,\" not as an approved drug.",
+    whatItDoes: "Thought to promote angiogenesis (new blood vessel formation) and modulate growth-factor pathways involved in tissue repair, which is why it's studied for tendon, ligament, muscle, and gut-lining healing.",
+    benefits: [
+      "Accelerated soft-tissue recovery observed in animal injury models",
+      "Anti-inflammatory effects reported in preclinical studies",
+      "Widely discussed anecdotally for joint and gut discomfort"
+    ],
+    risks: [
+      "Essentially no controlled human trials — safe dosing and long-term effects in people are unknown",
+      "Unregulated sourcing means actual purity and peptide content aren't guaranteed",
+      "Self-injecting an unapproved substance carries infection and immune-reaction risk"
+    ],
+    research: "Nearly all peer-reviewed data comes from animal models, mostly rodent tendon and ligament injury studies. No completed human clinical trials have established safety or efficacy — anything you read about human outcomes is anecdotal or from small, informal reports.",
+    faqs: [
+      { q: "Is BPC-157 legal?", a: "It varies by country and, in the US, by state. It isn't FDA-approved for human use, and enforcement has increasingly restricted compounding pharmacies from selling it — check current local regulations." },
+      { q: "Can I take it orally instead of injecting?", a: "Oral forms are sold, but oral bioavailability and effective human dosing are essentially unstudied compared to the injectable-focused animal research." },
+      { q: "How long do people cycle it?", a: "Anecdotal protocols vary widely, often several weeks, but there's no established clinical dosing schedule to defer to." }
+    ]
+  },
+  {
+    id: "tb500",
+    name: "TB-500 (Thymosin Beta-4 fragment)",
+    tag: "Synthetic peptide fragment",
+    evidence: "animal",
+    evidenceLabel: "Mostly animal studies",
+    whatItIs: "A synthetic fragment of thymosin beta-4, a naturally occurring protein involved in cell structure and movement.",
+    whatItDoes: "Studied for promoting cell migration to injury sites and supporting blood-vessel and muscle-tissue formation — often discussed alongside BPC-157 in soft-tissue recovery stacks.",
+    benefits: [
+      "Preclinical evidence of faster wound healing in animal models",
+      "Proposed reduction in scar tissue formation",
+      "Proposed anti-inflammatory action"
+    ],
+    risks: [
+      "Human safety and efficacy data are sparse",
+      "Its role in promoting cell migration/angiogenesis raises theoretical (not established) caution around unwanted cell growth",
+      "Same purity and sourcing risks as other unregulated research peptides"
+    ],
+    research: "Most data is preclinical — animal wound-healing and cardiac-tissue models. Human trial data is essentially absent from the public literature.",
+    faqs: [
+      { q: "Is TB-500 the same as Thymosin Beta-4?", a: "TB-500 is a synthetic fragment modeled on the active region of the full Thymosin Beta-4 protein, not the complete molecule." },
+      { q: "Do BPC-157 and TB-500 work better together?", a: "They're commonly stacked based on distinct proposed mechanisms (local repair signaling vs. cell migration), but there's no human trial comparing the combination to either compound alone." }
+    ]
+  },
+  {
+    id: "cjc1295",
+    name: "CJC-1295",
+    tag: "GHRH analogue",
+    evidence: "early",
+    evidenceLabel: "Early clinical",
+    whatItIs: "A synthetic analogue of growth-hormone-releasing hormone (GHRH), engineered for a longer half-life than the natural hormone.",
+    whatItDoes: "Stimulates the pituitary gland to release the body's own growth hormone in a more sustained pulse, rather than introducing external HGH directly.",
+    benefits: [
+      "Associated with modest increases in GH and IGF-1 in pharmacology studies of the GHRH mechanism",
+      "Commonly paired with a GHRP like Ipamorelin to amplify the natural GH pulse"
+    ],
+    risks: [
+      "Can cause water retention, joint discomfort, and changes in insulin sensitivity, especially at higher doses",
+      "Long-term cardiovascular and cancer-risk data for sustained GH elevation in healthy adults isn't established"
+    ],
+    research: "Clinical pharmacology work exists on GHRH analogues generally, but performance- or longevity-focused use in healthy adults isn't the studied population, so real-world outcome data for that specific use case is thin.",
+    faqs: [
+      { q: "What's the difference between CJC-1295 with and without DAC?", a: "\"DAC\" (Drug Affinity Complex) extends the compound's half-life significantly — days instead of hours — which changes dosing frequency and effects." },
+      { q: "Does it need to be paired with anything?", a: "It's frequently combined with a ghrelin-mimetic like Ipamorelin, since the two act on different GH-release pathways." }
+    ]
+  },
+  {
+    id: "ipamorelin",
+    name: "Ipamorelin",
+    tag: "Growth-hormone secretagogue (GHRP)",
+    evidence: "early",
+    evidenceLabel: "Early clinical",
+    whatItIs: "A selective growth-hormone secretagogue that mimics ghrelin to trigger GH release from the pituitary.",
+    whatItDoes: "Selectively stimulates pituitary GH release with comparatively less effect on cortisol and prolactin than older secretagogues, which is why it's considered \"cleaner\" within this class.",
+    benefits: [
+      "Preclinical and early pharmacology work suggests reliable, pulsatile GH stimulation",
+      "Relatively mild side-effect profile compared to older secretagogues"
+    ],
+    risks: [
+      "Increased appetite/hunger is a common effect",
+      "Potential for mild water retention or elevated blood sugar",
+      "Limited long-term human safety data in healthy, non-GH-deficient adults"
+    ],
+    research: "Much of the human evidence comes from small pharmacology studies rather than large randomized trials in the populations that typically use it off-label.",
+    faqs: [
+      { q: "Will it make me hungrier?", a: "Ghrelin-pathway compounds commonly increase appetite, and Ipamorelin is no exception for many users." },
+      { q: "Is it the same as HGH?", a: "No — it prompts your own pituitary to release GH rather than supplying synthetic growth hormone directly." }
+    ]
+  },
+  {
+    id: "sermorelin",
+    name: "Sermorelin",
+    tag: "GHRH analogue",
+    evidence: "clinical",
+    evidenceLabel: "Clinical history",
+    whatItIs: "A shorter GHRH analogue with a history of clinical and diagnostic use for growth-hormone deficiency.",
+    whatItDoes: "Like CJC-1295, prompts the pituitary to secrete GH, but with a shorter duration of action that requires more frequent dosing (often nightly).",
+    benefits: [
+      "The longest clinical track record of the GH-secretagogue class",
+      "Historically used for pediatric GH-deficiency evaluation and treatment"
+    ],
+    risks: [
+      "Injection-site reactions, headache, and flushing are documented",
+      "Long-term risks tied to sustained GH/IGF-1 exposure outside its approved deficiency indication aren't well characterized"
+    ],
+    research: "The strongest formal clinical evidence on this list is for its approved use diagnosing/treating GH deficiency. Use for anti-aging, performance, or body composition in otherwise healthy adults is off-label and far less studied.",
+    faqs: [
+      { q: "Is Sermorelin FDA-approved?", a: "A branded formulation was previously approved for GH-deficiency evaluation; it's no longer commercially marketed, and current sourcing is typically through compounding pharmacies." },
+      { q: "How is it different from CJC-1295?", a: "It's shorter-acting, so its GH pulse more closely mimics the body's natural nightly rhythm, but it requires more frequent injections." }
+    ]
+  },
+  {
+    id: "dsip",
+    name: "DSIP (Delta Sleep-Inducing Peptide)",
+    tag: "Neuropeptide",
+    evidence: "animal",
+    evidenceLabel: "Mostly early/animal research",
+    whatItIs: "A neuropeptide first identified in the 1970s from research into deep (delta-wave) sleep in rabbits.",
+    whatItDoes: "Proposed to influence sleep architecture and stress-hormone regulation, though the exact mechanism remains poorly understood.",
+    benefits: [
+      "Early research suggested potential for improving sleep onset and depth",
+      "Anecdotal reports of reduced stress/anxiety around sleep"
+    ],
+    risks: [
+      "Modern evidence for reliably improving human sleep is inconsistent",
+      "Limited safety data overall",
+      "Unclear interaction with other sleep aids or medications"
+    ],
+    research: "Much of the foundational research is decades old and wouldn't meet current study-design standards. It hasn't been validated in modern, well-controlled human sleep studies.",
+    faqs: [
+      { q: "Does it work like melatonin?", a: "No — the proposed mechanisms differ substantially, and unlike melatonin, DSIP isn't an established supplement with consistent human trial support." },
+      { q: "Is there a standard dose?", a: "No clinically established dosing exists; any protocol you see circulating is informal." }
+    ]
+  },
+  {
+    id: "semax",
+    name: "Semax",
+    tag: "ACTH-derived peptide",
+    evidence: "early",
+    evidenceLabel: "Early clinical (ex-Russia)",
+    whatItIs: "A synthetic peptide derived from a fragment of adrenocorticotropic hormone (ACTH), developed in Russia.",
+    whatItDoes: "Studied for neuroprotective and nootropic effects, proposed to influence BDNF (brain-derived neurotrophic factor) levels and neurotransmitter activity.",
+    benefits: [
+      "Russian clinical research reports cognitive and neuroprotective benefits, including in stroke-recovery contexts",
+      "Anecdotally used for focus and mental clarity"
+    ],
+    risks: [
+      "Evidence base is concentrated in a single research tradition/region and hasn't been widely replicated internationally",
+      "Regulatory status varies significantly by country",
+      "Intranasal administration carries its own irritation and absorption variability"
+    ],
+    research: "Most available clinical research originates from Russian institutions. Independent replication outside that research tradition is limited, so researchers and regulators elsewhere treat the evidence base cautiously.",
+    faqs: [
+      { q: "Is Semax approved anywhere?", a: "It has a history of medical use in Russia for certain neurological indications. It is not FDA-approved in the US." },
+      { q: "How is it taken?", a: "Typically intranasally — it isn't well absorbed orally and doesn't fit the injectable protocols common to GH-related peptides." }
+    ]
+  },
+  {
+    id: "selank",
+    name: "Selank",
+    tag: "Tuftsin analogue",
+    evidence: "early",
+    evidenceLabel: "Early clinical (ex-Russia)",
+    whatItIs: "A synthetic analogue of tuftsin, an immune-related peptide, also developed in Russia.",
+    whatItDoes: "Studied primarily for anxiolytic (anxiety-reducing) and mood effects, with some proposed cognitive benefits.",
+    benefits: [
+      "Early research suggests potential calming effects without the sedation associated with some anxiolytic medications"
+    ],
+    risks: [
+      "Same regional, non-replicated evidence base and regulatory uncertainty as Semax",
+      "Limited data on long-term use or combination with other mood-affecting substances"
+    ],
+    research: "Evidence is concentrated in the same research tradition as Semax, with similarly limited independent replication outside it.",
+    faqs: [
+      { q: "Can I take Semax and Selank together?", a: "They're commonly stacked anecdotally for combined cognitive/mood effects, but there's no controlled trial data on the combination." },
+      { q: "Is it addictive?", a: "There's no strong evidence either way in the available literature — a reason for caution, not reassurance." }
+    ]
+  },
+  {
+    id: "ghkcu",
+    name: "GHK-Cu (Copper peptide)",
+    tag: "Copper-binding tripeptide",
+    evidence: "clinical",
+    evidenceLabel: "Clinical (topical/derm)",
+    whatItIs: "A naturally occurring copper-binding tripeptide found in human plasma that declines with age, reproduced synthetically for topical and injectable use.",
+    whatItDoes: "Signals collagen and elastin production and has documented wound-healing and anti-inflammatory properties, mostly studied in skin.",
+    benefits: [
+      "One of the better-supported compounds on this list — published dermatology research on improved skin firmness and reduced fine lines",
+      "Documented wound-healing effects in topical form"
+    ],
+    risks: [
+      "Topical use is generally well-tolerated, but injectable/systemic use is far less studied",
+      "Can cause skin irritation or discoloration in some users"
+    ],
+    research: "Genuine peer-reviewed dermatology literature exists, largely for topical formulations. Injectable protocols popular in some peptide communities extrapolate beyond that evidence base.",
+    faqs: [
+      { q: "Is GHK-Cu safe to use daily?", a: "Topical formulations are used daily in many published studies; injectable/systemic daily use isn't backed by the same evidence." },
+      { q: "Does it interact with other actives like retinoids or vitamin C?", a: "Copper can destabilize some antioxidants such as vitamin C in skincare formulations — layering and product choice matter." }
+    ]
+  },
+  {
+    id: "epitalon",
+    name: "Epitalon",
+    tag: "Synthetic tetrapeptide",
+    evidence: "animal",
+    evidenceLabel: "Mostly animal/preclinical",
+    whatItIs: "A synthetic version of epithalamin, a compound derived from the pineal gland, studied in Russian aging research.",
+    whatItDoes: "Proposed to influence telomerase activity and circadian (melatonin) regulation — the basis for its reputation as a \"longevity peptide.\"",
+    benefits: [
+      "Animal studies report effects on lifespan markers in aged-animal models",
+      "Proposed circadian rhythm regulation"
+    ],
+    risks: [
+      "No established human longevity outcome data exists",
+      "Long-term effects of modulating telomerase activity in humans aren't well understood and carry theoretical concerns given telomerase's link to cancer biology"
+    ],
+    research: "Almost entirely animal/preclinical, concentrated in a specific Russian research tradition. No human trials have demonstrated a longevity benefit.",
+    faqs: [
+      { q: "Does it actually lengthen telomeres in humans?", a: "This hasn't been demonstrated in controlled human research — it's inferred from animal telomerase studies." },
+      { q: "How is it typically used?", a: "Anecdotal protocols describe short, cyclical courses (e.g., a couple of weeks), with no clinically validated schedule." }
+    ]
+  },
+  {
+    id: "thymosinalpha1",
+    name: "Thymosin Alpha-1",
+    tag: "Immune-modulating peptide",
+    evidence: "clinical",
+    evidenceLabel: "Approved in some countries",
+    whatItIs: "A naturally occurring peptide involved in immune regulation, produced synthetically as a drug approved in some countries.",
+    whatItDoes: "Modulates T-cell function and immune response; used clinically in several countries as an adjunct for certain infections and alongside other treatments.",
+    benefits: [
+      "Genuine approved clinical use in some countries, including historically as an immune adjunct in hepatitis treatment",
+      "Relatively well-characterized safety profile within its approved context"
+    ],
+    risks: [
+      "Injection-site reactions are the most common issue in its studied population",
+      "Evidence for general \"healthspan\" or anti-aging use outside its approved immune indications is much thinner than its approved-use evidence"
+    ],
+    research: "Has real clinical trial history for its approved indications. The \"longevity supplement\" use popular in peptide communities is not the studied application.",
+    faqs: [
+      { q: "Is this the same as Thymosin Beta-4 / TB-500?", a: "No — a different peptide with a different proposed mechanism (immune modulation vs. tissue repair/cell migration)." },
+      { q: "Where is it approved?", a: "Approval status varies by country and has shifted over time; it isn't broadly approved in the US for general use." }
+    ]
+  },
+  {
+    id: "tesamorelin",
+    name: "Tesamorelin",
+    tag: "GHRH analogue",
+    evidence: "clinical",
+    evidenceLabel: "Clinically established",
+    whatItIs: "A GHRH analogue that is FDA-approved in the US for a specific indication: reducing excess visceral fat in HIV-associated lipodystrophy.",
+    whatItDoes: "Stimulates the body's natural GH release, similar to other GHRH analogues, but it went through full clinical trials for its approved use.",
+    benefits: [
+      "The strongest formal safety/efficacy dataset of any peptide on this list, from the FDA approval process"
+    ],
+    risks: [
+      "Documented trial side effects include injection-site reactions, joint pain/swelling, and effects on blood sugar/insulin sensitivity",
+      "Use outside its approved population (general fat loss without HIV-associated lipodystrophy) is off-label — that population wasn't the one studied"
+    ],
+    research: "Genuine phase 3 clinical trial data exists — the most robust evidence base on this list — but it applies specifically to the approved indication, not general fat-loss use.",
+    faqs: [
+      { q: "Can anyone get a prescription for general fat loss?", a: "Its FDA approval is specific to HIV-associated lipodystrophy; off-label prescribing for general use is a decision between a patient and their provider, not something the approval itself covers." },
+      { q: "What monitoring did the approval trials include?", a: "Blood sugar and IGF-1 monitoring were part of the clinical protocol — a reasonable model for anyone using it off-label to discuss with a provider." }
+    ]
+  },
+  {
+    id: "aod9604",
+    name: "AOD-9604",
+    tag: "HGH fragment 176-191",
+    evidence: "animal",
+    evidenceLabel: "Mostly early/animal research",
+    whatItIs: "A modified fragment of human growth hormone (amino acids 176-191), engineered to isolate GH's fat-metabolizing region without its broader growth effects.",
+    whatItDoes: "Studied for stimulating lipolysis (fat breakdown) and inhibiting fat accumulation without the anabolic/growth-promoting effects of full HGH.",
+    benefits: [
+      "The underlying rationale — isolating a beneficial fragment while avoiding IGF-1-driven growth effects — was scientifically reasonable enough to pursue through actual obesity-drug clinical trials"
+    ],
+    risks: [
+      "Those clinical obesity trials found it didn't outperform placebo on weight loss — an important, often-omitted part of its history",
+      "Current use is unapproved and sourced from research-chemical vendors, with the same purity concerns as the rest of this list"
+    ],
+    research: "Went through real Phase II human obesity trials — more human data than most peptides here — but the trials didn't show a meaningful fat-loss benefit over placebo, and development was discontinued for that indication.",
+    faqs: [
+      { q: "If trials showed it didn't work, why is it still sold?", a: "It remains available through research-chemical channels despite the negative trial outcome for its original indication — worth weighing against current marketing claims." },
+      { q: "Is it the same as \"HGH fragment 176-191\" sold elsewhere?", a: "Yes — that's the same compound. AOD-9604 is the name given to this specific HGH fragment." }
+    ]
+  }
+];
+
+/* ---------------- tab navigation ---------------- */
+
+const TAB_IDS = ["home","survey","glossary","vendors"];
+
+function switchTab(tab){
+  TAB_IDS.forEach(t => {
+    document.getElementById("tab-" + t).classList.toggle("active", t === tab);
+  });
+  document.querySelectorAll(".tab-btn").forEach(btn => {
+    btn.classList.toggle("active", btn.dataset.tab === tab);
+  });
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
 /* ---- goal keyword matching ---- */
 
@@ -767,7 +1307,11 @@ renderChoiceList(document.getElementById("activityChoices"), ACTIVITY, (id) => {
   document.getElementById("next3").disabled = false;
 });
 
-/* ---------------- navigation ---------------- */
+/* ---------------- survey state & navigation ---------------- */
+
+let state = { goalText: "", goals: [], experience: null, activity: null, health: {} };
+let currentScreen = 0;
+const screenIds = ["screen-hero","screen-1","screen-2","screen-3","screen-4","screen-results"];
 
 function goTo(n){
   currentScreen = n;
@@ -780,7 +1324,7 @@ function goTo(n){
 }
 
 function restart(){
-  state = { goalText: "", goals: [], experience: null, activity: null, health: {}, researchResponseId: null };
+  state = { goalText: "", goals: [], experience: null, activity: null, health: {} };
   document.getElementById("goalInput").value = "";
   document.getElementById("chipPanel").classList.remove("visible");
   document.getElementById("next1").disabled = true;
@@ -790,66 +1334,7 @@ function restart(){
     document.getElementById(id).value = "";
   });
   [...document.querySelectorAll(".choice")].forEach(c => c.classList.remove("selected"));
-  document.getElementById("researchThread").innerHTML = "";
-  document.getElementById("researchInput").value = "";
   goTo(0);
-}
-
-/* ---------------- research (Perplexity Agent API) ---------------- */
-
-function escapeHtml(str){
-  return String(str ?? "").replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
-}
-
-async function askResearch(){
-  const input = document.getElementById("researchInput");
-  const question = input.value.trim();
-  if(!question) return;
-
-  const btn = document.getElementById("researchBtn");
-  const thread = document.getElementById("researchThread");
-  btn.disabled = true;
-  input.value = "";
-
-  const turn = document.createElement("div");
-  turn.className = "research-turn";
-  turn.innerHTML = `<div class="research-q">${escapeHtml(question)}</div><div class="research-loading">Searching the web…</div>`;
-  thread.appendChild(turn);
-  turn.scrollIntoView({ behavior: "smooth", block: "nearest" });
-
-  try {
-    const selectedGoalLabels = GOALS.filter(g => state.goals.includes(g.id)).map(g => g.label);
-    const res = await fetch("/api/research", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        question,
-        goalContext: selectedGoalLabels,
-        previousResponseId: state.researchResponseId || undefined
-      })
-    });
-    const data = await res.json();
-
-    if(!res.ok){
-      const message = res.status === 429
-        ? "We're getting rate-limited right now — give it a moment and try again."
-        : (data.message || "Something went wrong answering that.");
-      turn.innerHTML = `<div class="research-q">${escapeHtml(question)}</div><div class="research-error">${escapeHtml(message)}</div>`;
-      return;
-    }
-
-    state.researchResponseId = data.id;
-    const citesHtml = (data.citations || []).length
-      ? `<div class="research-cites">${data.citations.map(c =>
-          `<a href="${escapeHtml(c.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(c.title)}</a>`
-        ).join("")}</div>`
-      : "";
-    turn.innerHTML = `<div class="research-q">${escapeHtml(question)}</div><p class="research-a">${escapeHtml(data.answer)}</p>${citesHtml}`;
-  } catch (err) {
-    turn.innerHTML = `<div class="research-q">${escapeHtml(question)}</div><div class="research-error">Couldn't reach the server — make sure it's running.</div>`;
-  } finally {
-    btn.disabled = false;
-  }
 }
 
 /* ---------------- results ---------------- */
@@ -918,6 +1403,10 @@ function showResults(){
     goal.protocols.forEach(p => {
       const el = document.createElement("div");
       el.className = "protocol";
+      const links = (p.glossaryIds || []).map(gid => {
+        const entry = PEPTIDES.find(x => x.id === gid);
+        return entry ? `<button type="button" class="glossary-link" onclick="openGlossaryEntry('${gid}')">Full profile: ${entry.name} →</button>` : "";
+      }).join("");
       el.innerHTML = `
         <div class="protocol-head">
           <div class="protocol-name">${p.name}</div>
@@ -935,6 +1424,7 @@ function showResults(){
             <dd>${p.cycle}</dd>
           </dl>
         </div>
+        ${links ? `<div class="protocol-links">${links}</div>` : ""}
       `;
       group.appendChild(el);
     });
@@ -943,6 +1433,158 @@ function showResults(){
 
   goTo(5);
 }
+
+/* ---------------- glossary ---------------- */
+
+function renderGlossary(){
+  const container = document.getElementById("glossaryList");
+  container.innerHTML = PEPTIDES.map(p => `
+    <div class="acc-item" id="acc-${p.id}" data-search="${(p.name + " " + p.tag).toLowerCase()}">
+      <button type="button" class="acc-header" onclick="toggleAccordion('${p.id}')" aria-expanded="false">
+        <span class="acc-header-main">
+          <span class="acc-name">${p.name}</span>
+          <span class="acc-tag">${p.tag}</span>
+        </span>
+        <span class="evidence ${p.evidence}">${p.evidenceLabel}</span>
+        <span class="acc-chevron">⌄</span>
+      </button>
+      <div class="acc-body-wrap">
+        <div class="acc-body"><div class="acc-body-inner">
+          <div class="acc-section">
+            <div class="acc-section-title">What it is</div>
+            <p>${p.whatItIs}</p>
+          </div>
+          <div class="acc-section">
+            <div class="acc-section-title">What it does</div>
+            <p>${p.whatItDoes}</p>
+          </div>
+          <div class="acc-section">
+            <div class="acc-section-title">Potential benefits</div>
+            <ul class="acc-list">${p.benefits.map(b => `<li>${b}</li>`).join("")}</ul>
+          </div>
+          <div class="acc-section">
+            <div class="acc-section-title">Risks &amp; unknowns</div>
+            <ul class="acc-list">${p.risks.map(r => `<li>${r}</li>`).join("")}</ul>
+          </div>
+          <div class="acc-section">
+            <div class="acc-section-title">Recent research</div>
+            <p>${p.research}</p>
+          </div>
+          <div class="acc-section">
+            <div class="acc-section-title">FAQ</div>
+            ${p.faqs.map(f => `<div class="faq-item"><div class="faq-q">${f.q}</div><p class="faq-a">${f.a}</p></div>`).join("")}
+          </div>
+        </div></div>
+      </div>
+    </div>
+  `).join("");
+}
+
+function toggleAccordion(id){
+  const item = document.getElementById("acc-" + id);
+  if(!item) return;
+  const willOpen = !item.classList.contains("open");
+  item.classList.toggle("open", willOpen);
+  item.querySelector(".acc-header").setAttribute("aria-expanded", String(willOpen));
+}
+
+function openGlossaryEntry(id){
+  switchTab("glossary");
+  const searchBox = document.getElementById("glossarySearch");
+  if(searchBox.value){
+    searchBox.value = "";
+    filterGlossary();
+  }
+  const item = document.getElementById("acc-" + id);
+  if(!item) return;
+  item.classList.add("open");
+  item.querySelector(".acc-header").setAttribute("aria-expanded", "true");
+  requestAnimationFrame(() => item.scrollIntoView({ behavior: "smooth", block: "start" }));
+}
+
+function filterGlossary(){
+  const q = document.getElementById("glossarySearch").value.trim().toLowerCase();
+  const items = [...document.querySelectorAll(".acc-item")];
+  let visibleCount = 0;
+  items.forEach(item => {
+    const match = !q || item.dataset.search.includes(q);
+    item.style.display = match ? "" : "none";
+    if(match) visibleCount++;
+  });
+  document.getElementById("glossaryEmpty").style.display = visibleCount === 0 ? "block" : "none";
+}
+
+/* ---------------- vendors (private, local-only notebook) ---------------- */
+
+const VENDOR_STORAGE_KEY = "protocol_vendor_notebook_v1";
+
+function escapeHtml(str){
+  return String(str ?? "").replace(/[&<>"']/g, (c) => ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+}
+
+function loadVendors(){
+  try {
+    const raw = localStorage.getItem(VENDOR_STORAGE_KEY);
+    const parsed = raw ? JSON.parse(raw) : [];
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (err) {
+    return [];
+  }
+}
+
+function saveVendors(list){
+  try { localStorage.setItem(VENDOR_STORAGE_KEY, JSON.stringify(list)); } catch (err) { /* storage unavailable — notebook just won't persist */ }
+}
+
+function renderVendorList(){
+  const list = loadVendors();
+  const container = document.getElementById("vendorList");
+  if(!list.length){
+    container.innerHTML = '<p class="q-help">Nothing saved yet — entries you add stay in this browser only.</p>';
+    return;
+  }
+  container.innerHTML = list.map((v, i) => `
+    <div class="vendor-card">
+      <div class="vendor-card-head">
+        <div>
+          <div class="vendor-name">${escapeHtml(v.name)}</div>
+          ${v.url ? `<a class="vendor-url" href="${escapeHtml(v.url)}" target="_blank" rel="noopener noreferrer">${escapeHtml(v.url)}</a>` : ""}
+        </div>
+        <button type="button" class="back-link" onclick="removeVendor(${i})">Remove</button>
+      </div>
+      ${v.notes ? `<p class="vendor-notes">${escapeHtml(v.notes)}</p>` : ""}
+    </div>
+  `).join("");
+}
+
+function addVendor(){
+  const nameEl = document.getElementById("vendorName");
+  const urlEl = document.getElementById("vendorUrl");
+  const notesEl = document.getElementById("vendorNotes");
+  const name = nameEl.value.trim();
+  if(!name) { nameEl.focus(); return; }
+
+  const list = loadVendors();
+  list.push({ name, url: urlEl.value.trim(), notes: notesEl.value.trim() });
+  saveVendors(list);
+
+  nameEl.value = "";
+  urlEl.value = "";
+  notesEl.value = "";
+  renderVendorList();
+}
+
+function removeVendor(index){
+  const list = loadVendors();
+  list.splice(index, 1);
+  saveVendors(list);
+  renderVendorList();
+}
+
+/* ---------------- init ---------------- */
+
+renderGlossary();
+renderVendorList();
 </script>
 
 </body>
