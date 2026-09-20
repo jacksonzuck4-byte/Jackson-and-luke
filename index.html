@@ -19,6 +19,7 @@
     --accent-soft: rgba(111,206,158,0.16);
     --warn:#E2905A;
     --warn-soft: rgba(226,144,90,0.16);
+    --fda-blue:#4FA3E0;
     --mono: 'IBM Plex Mono', monospace;
     --serif: 'Fraunces', serif;
     --sans: 'Inter', sans-serif;
@@ -344,7 +345,24 @@
 
   .protocol{ padding: 22px 0; border-bottom: 1px solid var(--line); }
   .protocol-head{ display:flex; justify-content:space-between; align-items:baseline; gap: 16px; margin-bottom: 6px; }
+  .protocol-name-row, .acc-name-row{ display:inline-flex; align-items:center; gap: 8px; flex-wrap:wrap; }
   .protocol-name{ font-family: var(--serif); font-size: 22px; font-weight: 500; }
+  .fda-badge{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width: 20px;
+    height: 20px;
+    flex: none;
+    background: var(--fda-blue);
+    color: #0B1720;
+    font-family: var(--sans);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    border-radius: 0;
+    cursor: help;
+  }
   .evidence{
     font-family: var(--mono);
     font-size: 11px;
@@ -461,8 +479,13 @@
   .acc-section-title{
     font-family: var(--mono); font-size: 11px; text-transform:uppercase; letter-spacing:0.04em;
     color: var(--ink-soft); margin-bottom: 8px;
+    display:flex; align-items:center; gap:8px;
   }
-  .acc-section p{ font-size:14px; color: var(--ink-soft); margin:0; }
+  .acc-section-title.fda{ color: var(--fda-blue); }
+  .acc-section p{ font-size:14px; color: var(--ink-soft); margin:0 0 8px; }
+  .acc-section p:last-child{ margin-bottom:0; }
+  .fda-detail{ color: var(--ink) !important; }
+  .fda-detail strong{ color: var(--fda-blue); }
   .acc-list{ margin:0; padding-left:18px; }
   .acc-list li{ font-size:14px; color: var(--ink-soft); margin-bottom:6px; }
   .acc-list li:last-child{ margin-bottom:0; }
@@ -683,7 +706,8 @@
   <section class="tab-panel" id="tab-glossary">
     <div class="hero" style="padding-top:20px; padding-bottom:8px;">
       <h1 style="max-width:16ch; font-size:clamp(26px,5vw,36px);">Peptide &amp; supplement glossary</h1>
-      <p style="margin-bottom:16px;">Every peptide and supplement the survey can suggest, in plain language, grouped below by kind. Evidence levels reflect how much of the research is human/clinical versus animal/preclinical — click an entry to expand it.</p>
+      <p style="margin-bottom:10px;">Every peptide and supplement the survey can suggest, in plain language, grouped below by kind. Evidence levels reflect how much of the research is human/clinical versus animal/preclinical — click an entry to expand it.</p>
+      <p style="margin-bottom:16px; display:flex; align-items:center; gap:8px; font-size:14px; color:var(--ink-soft);"><span class="fda-badge" style="cursor:default;">✓</span> means we checked the FDA's own Drugs@FDA dataset and found a real approved drug application for that substance — expand the entry for the specifics (brand, sponsor, date, and, importantly, exactly what was approved). No badge means we checked and found nothing, not that we didn't look.</p>
     </div>
 
     <input type="text" class="glossary-search" id="glossarySearch" placeholder="Search by name (e.g. BPC-157, sleep, GHRH)..." oninput="filterGlossary()">
@@ -1245,6 +1269,14 @@ const PEPTIDES = [
     tag: "GHRH analogue",
     evidence: "clinical",
     evidenceLabel: "Clinical history",
+    fda: {
+      brand: "Geref",
+      applicationNumber: "NDA 019-863 / NDA 020-443",
+      sponsor: "EMD Serono",
+      approvalDate: "December 28, 1990",
+      status: "Discontinued — approval was never revoked, but the branded product is no longer marketed",
+      note: "Confirmed against the FDA's own Drugs@FDA dataset: sermorelin acetate (as Geref) was a real, approved drug for diagnosing/treating growth-hormone deficiency. It's not currently sold under that approval — today's supply comes from compounding pharmacies, which operate under different rules than an FDA-approved product."
+    },
     whatItIs: "A shorter GHRH analogue with a history of clinical and diagnostic use for growth-hormone deficiency.",
     whatItDoes: "Like CJC-1295, prompts the pituitary to secrete GH, but with a shorter duration of action that requires more frequent dosing (often nightly).",
     benefits: [
@@ -1255,10 +1287,10 @@ const PEPTIDES = [
       "Injection-site reactions, headache, and flushing are documented",
       "Long-term risks tied to sustained GH/IGF-1 exposure outside its approved deficiency indication aren't well characterized"
     ],
-    research: "The strongest formal clinical evidence on this list is for its approved use diagnosing/treating GH deficiency. Use for anti-aging, performance, or body composition in otherwise healthy adults is off-label and far less studied.",
+    research: "The strongest formal clinical evidence on this list is for its approved use diagnosing/treating GH deficiency — as Geref (NDA 019-863, approved December 28, 1990), sponsored by EMD Serono. That approval was for the diagnostic/deficiency indication specifically; use for anti-aging, performance, or body composition in otherwise healthy adults was never the approved indication and is far less studied.",
     faqs: [
-      { q: "Is Sermorelin FDA-approved?", a: "A branded formulation was previously approved for GH-deficiency evaluation; it's no longer commercially marketed, and current sourcing is typically through compounding pharmacies." },
-      { q: "How is it different from CJC-1295?", a: "It's shorter-acting, so its GH pulse more closely mimics the body's natural nightly rhythm, but it requires more frequent injections." }
+      { q: "Is Sermorelin FDA-approved?", a: "It was — as Geref (sermorelin acetate), approved December 28, 1990, for growth-hormone deficiency. That approval still stands on paper, but the branded product is discontinued and no longer commercially sold, so current sourcing is typically through compounding pharmacies, which operate outside the original approval." },
+      { q: "How is it different from CJC-1295?", a: "It's shorter-acting, so its GH pulse more closely mimics the body's natural nightly rhythm, but it requires more frequent injections. CJC-1295 has never had its own FDA approval, unlike Sermorelin." }
     ]
   },
   {
@@ -1400,6 +1432,14 @@ const PEPTIDES = [
     tag: "GHRH analogue",
     evidence: "clinical",
     evidenceLabel: "Clinically established",
+    fda: {
+      brand: "Egrifta",
+      applicationNumber: "BLA 022505",
+      sponsor: "Theratechnologies",
+      approvalDate: "November 10, 2010",
+      status: "Prescription — currently marketed",
+      note: "Confirmed against the FDA's Drugs@FDA dataset: tesamorelin acetate is currently an actively marketed, FDA-approved prescription drug — the strongest regulatory standing of any peptide on this list. The approval covers reducing excess visceral fat specifically in HIV-associated lipodystrophy, not fat loss generally."
+    },
     whatItIs: "A GHRH analogue that is FDA-approved in the US for a specific indication: reducing excess visceral fat in HIV-associated lipodystrophy.",
     whatItDoes: "Stimulates the body's natural GH release, similar to other GHRH analogues, but it went through full clinical trials for its approved use.",
     benefits: [
@@ -1409,9 +1449,9 @@ const PEPTIDES = [
       "Documented trial side effects include injection-site reactions, joint pain/swelling, and effects on blood sugar/insulin sensitivity",
       "Use outside its approved population (general fat loss without HIV-associated lipodystrophy) is off-label — that population wasn't the one studied"
     ],
-    research: "Genuine phase 3 clinical trial data exists — the most robust evidence base on this list — but it applies specifically to the approved indication, not general fat-loss use.",
+    research: "Genuine phase 3 clinical trial data exists — the most robust evidence base on this list — as Egrifta (BLA 022505, approved November 10, 2010, sponsored by Theratechnologies), still an actively marketed prescription drug today. That approval applies specifically to the studied indication, not general fat-loss use.",
     faqs: [
-      { q: "Can anyone get a prescription for general fat loss?", a: "Its FDA approval is specific to HIV-associated lipodystrophy; off-label prescribing for general use is a decision between a patient and their provider, not something the approval itself covers." },
+      { q: "Can anyone get a prescription for general fat loss?", a: "Its FDA approval (as Egrifta, since 2010) is specific to HIV-associated lipodystrophy; off-label prescribing for general use is a decision between a patient and their provider, not something the approval itself covers." },
       { q: "What monitoring did the approval trials include?", a: "Blood sugar and IGF-1 monitoring were part of the clinical protocol — a reasonable model for anyone using it off-label to discuss with a provider." }
     ]
   },
@@ -1503,6 +1543,14 @@ const SUPPLEMENTS = [
     evidence: "clinical",
     evidenceLabel: "Extensively studied",
     kind: "supplement",
+    fda: {
+      brand: "e.g. Infuvite Adult, Fosamax Plus D",
+      applicationNumber: "NDA 021163 (Infuvite Adult); NDA 021762 (Fosamax Plus D)",
+      sponsor: "Sandoz Canada; Organon",
+      approvalDate: "May 18, 2000 (Infuvite Adult)",
+      status: "Prescription — but only as an ingredient in specific combination/injectable drugs",
+      note: "Confirmed against the FDA's Drugs@FDA dataset: cholecalciferol shows up as an approved drug ingredient only inside prescription IV multivitamin products and the osteoporosis combination pill Fosamax Plus D (alendronate + cholecalciferol) — never as a standalone daily vitamin D capsule. The bottle you'd buy at a pharmacy is regulated as a supplement, not an FDA-approved drug, even though the molecule itself has real drug approvals in these other contexts."
+    },
     whatItIs: "A vitamin the body produces from sun exposure and that's also available through food and supplements; D3 (cholecalciferol) is the form most commonly used in supplements and most effectively raises blood levels.",
     whatItDoes: "Regulates calcium absorption and bone health, and plays a role in immune function and muscle performance — deficiency is common, especially with limited sun exposure.",
     benefits: [
@@ -1515,10 +1563,11 @@ const SUPPLEMENTS = [
       "Benefits are strongest when correcting an actual deficiency — supplementing when you're already sufficient shows much weaker evidence for extra benefit",
       "Fat-soluble, so it can build up over time unlike water-soluble vitamins"
     ],
-    research: "One of the more clinically established vitamins — deficiency is well-documented and correction has consistent evidence for bone and immune outcomes. Evidence for benefits beyond correcting deficiency is considerably weaker than marketing often suggests.",
+    research: "One of the more clinically established vitamins — deficiency is well-documented and correction has consistent evidence for bone and immune outcomes. Cholecalciferol itself has real FDA drug approvals too, but only bundled into prescription IV multivitamins and the Fosamax Plus D combination pill (NDA 021762, 2005) — not as the standalone capsule most people take, which is regulated as a supplement. Evidence for benefits beyond correcting deficiency is considerably weaker than marketing often suggests.",
     faqs: [
       { q: "How do I know if I need it?", a: "A blood test for 25-hydroxyvitamin D is the standard way to check — supplementing blindly means you might already be sufficient or might need a much higher dose than typical over-the-counter amounts." },
-      { q: "Does it need to be taken with fat?", a: "Yes — being fat-soluble, absorption improves when taken with a meal containing some fat." }
+      { q: "Does it need to be taken with fat?", a: "Yes — being fat-soluble, absorption improves when taken with a meal containing some fat." },
+      { q: "So is my vitamin D3 bottle FDA-approved or not?", a: "Not in the drug sense. The FDA has approved cholecalciferol as an ingredient in specific prescription products (IV multivitamins, Fosamax Plus D), but a standalone OTC vitamin D3 supplement is regulated as a food/supplement, never submitted for that kind of approval." }
     ]
   },
   {
@@ -1565,9 +1614,9 @@ const SUPPLEMENTS = [
       "People with kidney disease need to be cautious, since impaired kidneys can't clear excess magnesium as effectively",
       "As with several entries here, the strongest evidence is about correcting deficiency, not about supplementing when you're already replete"
     ],
-    research: "Magnesium deficiency is common and correction has decent clinical support for sleep and muscle symptoms. The strongest evidence applies to people who are actually deficient, which not everyone taking it is.",
+    research: "Magnesium deficiency is common and correction has decent clinical support for sleep and muscle symptoms. The strongest evidence applies to people who are actually deficient, which not everyone taking it is. For the record: we checked the FDA's own drug database, and magnesium glycinate specifically has no approved drug application — no checkmark here. Other magnesium salts do (magnesium sulfate injection for eclampsia, magnesium oxide/hydroxide as an antacid or laxative), but those are different chemical forms approved for different, unrelated uses, not evidence for this one.",
     faqs: [
-      { q: "How is it different from magnesium oxide?", a: "Magnesium oxide is cheaper and has more elemental magnesium by weight but is poorly absorbed and more likely to cause GI upset; glycinate trades some elemental content for much better tolerability." },
+      { q: "How is it different from magnesium oxide?", a: "Magnesium oxide is cheaper and has more elemental magnesium by weight but is poorly absorbed and more likely to cause GI upset; glycinate trades some elemental content for much better tolerability. Note that oxide has FDA-approved drug uses (as a laxative/antacid) that glycinate doesn't share — different form, different regulatory status." },
       { q: "Should I take it at night?", a: "It's commonly taken in the evening given its association with muscle relaxation and sleep, though absorption isn't strictly time-dependent." }
     ]
   },
@@ -1603,6 +1652,14 @@ const SUPPLEMENTS = [
     evidence: "clinical",
     evidenceLabel: "Extensively studied",
     kind: "supplement",
+    fda: {
+      brand: "Vascepa (icosapent ethyl), Lovaza (omega-3-acid ethyl esters)",
+      applicationNumber: "NDA 202057 (Vascepa); NDA 021654 (Lovaza)",
+      sponsor: "Amarin Pharmaceuticals; Waylis Therapeutics",
+      approvalDate: "July 26, 2012 (Vascepa); November 10, 2004 (Lovaza)",
+      status: "Prescription — both currently marketed, plus numerous generic versions of each",
+      note: "Confirmed against the FDA's Drugs@FDA dataset: these are real, purified, high-dose prescription omega-3 drugs approved for specific cardiovascular indications (like very high triglycerides) — genuinely different products from an OTC fish oil softgel, even though they share the same fatty acids."
+    },
     whatItIs: "Long-chain omega-3 fatty acids (EPA and DHA) found in fatty fish and algae, concentrated into supplement form for people who don't get enough from diet.",
     whatItDoes: "Incorporated into cell membranes throughout the body, with well-documented anti-inflammatory signaling effects and roles in cardiovascular and brain health.",
     benefits: [
@@ -1615,9 +1672,9 @@ const SUPPLEMENTS = [
       "Fishy aftertaste/burps are a common, harmless complaint that can often be reduced by taking it with food or choosing enteric-coated forms",
       "Product quality and oxidation vary — rancid fish oil is both unpleasant and less beneficial"
     ],
-    research: "One of the most extensively researched supplements, with genuine large-scale cardiovascular outcome trials behind it — though results for the general population (versus people with elevated triglycerides or documented low intake) are more modest than early hype suggested.",
+    research: "One of the most extensively researched supplements, with genuine large-scale cardiovascular outcome trials behind two currently-marketed FDA-approved prescription drugs: Vascepa (icosapent ethyl, NDA 202057, approved 2012) and Lovaza (omega-3-acid ethyl esters, NDA 021654, approved 2004). Results for the general population taking an OTC supplement (versus the elevated-triglyceride population those drugs were studied and approved in) are more modest than early hype suggested.",
     faqs: [
-      { q: "Is fish oil the same as a prescription omega-3?", a: "Prescription formulations (like icosapent ethyl) are purified, higher-dose, and FDA-approved for specific cardiovascular indications — a different regulatory category than an over-the-counter fish oil supplement." },
+      { q: "Is fish oil the same as a prescription omega-3?", a: "No. Prescription formulations like Vascepa (icosapent ethyl) and Lovaza (omega-3-acid ethyl esters) are purified, higher-dose, and FDA-approved for specific cardiovascular indications — a different regulatory category than an over-the-counter fish oil supplement, even with overlapping fatty acids." },
       { q: "Algae oil vs. fish oil?", a: "Algae-based omega-3 supplements provide the same EPA/DHA without fish, and are a reasonable option for vegetarians/vegans or anyone concerned about ocean contaminants." }
     ]
   },
@@ -1640,7 +1697,7 @@ const SUPPLEMENTS = [
       "No strong evidence that the collagen you eat is specifically routed to the areas you want it to help (skin vs. joints) versus being broken down and used like any other protein",
       "Marine and bovine sources are most common — worth checking if that matters to your diet or allergies"
     ],
-    research: "A genuinely growing evidence base with real human trials (unlike most injectable peptides on this site), but effect sizes are modest and industry-funded research is common in this space, so it's reasonable to weigh the evidence a bit more skeptically than the marketing around it.",
+    research: "A genuinely growing evidence base with real human trials (unlike most injectable peptides on this site), but effect sizes are modest and industry-funded research is common in this space, so it's reasonable to weigh the evidence a bit more skeptically than the marketing around it. We checked the FDA's drug database directly: collagen itself has no approved drug application — no checkmark here. The only FDA-approved \"collagen\"-adjacent drug we found is collagenase (Xiaflex), an enzyme that breaks collagen down for Dupuytren's contracture and Peyronie's disease — the opposite function, and completely unrelated to this supplement.",
     faqs: [
       { q: "Is this the same as GHK-Cu or other peptides in the glossary?", a: "No — this is an oral protein supplement broken into peptide-sized chains for digestion, not an injectable signaling peptide like GHK-Cu or BPC-157. Different product category, different mechanism." },
       { q: "How long before I'd notice anything?", a: "Studies showing benefit typically used consistent daily use for 8-12 weeks or longer — this isn't a fast-acting supplement." }
@@ -1653,6 +1710,14 @@ const SUPPLEMENTS = [
     evidence: "clinical",
     evidenceLabel: "Extensively studied",
     kind: "supplement",
+    fda: {
+      brand: "e.g. Ascor",
+      applicationNumber: "NDA 209112",
+      sponsor: "McGuff Pharmaceuticals",
+      approvalDate: "October 2, 2017",
+      status: "Prescription — that specific IV product is currently marketed, plus decades of history in multivitamin injections back to the 1940s",
+      note: "Confirmed against the FDA's Drugs@FDA dataset: ascorbic acid has real drug approvals, but as an injectable (IV) product for clinical use, and as an ingredient in prescription multivitamin infusions and bowel-prep drugs — not as the OTC vitamin C tablet most people take."
+    },
     whatItIs: "An essential vitamin the body can't produce on its own, required for numerous biological processes including collagen synthesis.",
     whatItDoes: "A cofactor required for the enzymes that stabilize collagen, plus a well-known antioxidant and support for immune cell function.",
     benefits: [
@@ -1665,7 +1730,7 @@ const SUPPLEMENTS = [
       "People with a history of kidney stones (specifically oxalate stones) should be cautious with high-dose supplementation",
       "Interacts with certain lab tests (e.g., glucose monitoring) at high doses"
     ],
-    research: "About as well-established a nutrient as exists — the deficiency disease (scurvy) and its cure are some of the oldest documented nutrition science. Most people in developed countries get adequate amounts from diet, so supplementation mainly helps close a gap rather than provide benefit beyond sufficiency.",
+    research: "About as well-established a nutrient as exists — the deficiency disease (scurvy) and its cure are some of the oldest documented nutrition science. Ascorbic acid also has genuine FDA drug approvals, but as an IV product (like Ascor, NDA 209112, approved 2017) for clinical use, not the standalone oral tablet. Most people in developed countries get adequate amounts from diet, so supplementation mainly helps close a gap rather than provide benefit beyond sufficiency.",
     faqs: [
       { q: "Do I need vitamin C for a collagen supplement to work?", a: "Since vitamin C is required for collagen synthesis, some people pair it with collagen supplements on the theory that it supports the body's use of those amino acids — though this specific combination hasn't been extensively trial-tested together." },
       { q: "Is more always better for immunity?", a: "No — evidence supports adequate intake, not megadosing; extra vitamin C beyond what your body uses is simply excreted." }
@@ -1778,6 +1843,14 @@ const SUPPLEMENTS = [
     evidence: "early",
     evidenceLabel: "Modest evidence",
     kind: "supplement",
+    fda: {
+      brand: "Veregen (sinecatechins)",
+      applicationNumber: "NDA 021902",
+      sponsor: "ANI Pharmaceuticals",
+      approvalDate: "October 31, 2006",
+      status: "Prescription — currently marketed, but for a completely different use",
+      note: "Confirmed against the FDA's Drugs@FDA dataset — and this one's a genuine mismatch worth flagging: sinecatechins, a defined mixture of green tea catechins, is an FDA-approved drug. But it's Veregen, a topical ointment approved for external genital and perianal warts. It has nothing to do with weight loss, isn't oral, and isn't dosed anything like a fat-loss supplement. Don't read this checkmark as approval for the use this entry is actually about."
+    },
     whatItIs: "A concentrated extract of catechins (notably EGCG) from green tea leaves, providing a much higher dose than you'd get from drinking tea.",
     whatItDoes: "Proposed to modestly increase energy expenditure and fat oxidation, often combined with its naturally occurring caffeine content for a synergistic effect.",
     benefits: [
@@ -1790,10 +1863,11 @@ const SUPPLEMENTS = [
       "Effect sizes for fat loss are small — this isn't a substitute for diet and training, just a modest addition on top of them",
       "Caffeine content can cause jitteriness or affect sleep if taken later in the day"
     ],
-    research: "Modest, real evidence exists from meta-analyses of human trials, but the effect size is small — think a minor addition to a solid diet and training plan, not a meaningful fat-loss driver on its own.",
+    research: "Modest, real evidence exists from meta-analyses of human trials, but the effect size is small — think a minor addition to a solid diet and training plan, not a meaningful fat-loss driver on its own. Worth knowing: a green tea catechin extract (sinecatechins) does have FDA approval — as Veregen, a topical wart treatment (NDA 021902, 2006) — but that approval says nothing about the oral, fat-loss use case this entry covers; they're different extracts, different routes, different indications entirely.",
     faqs: [
       { q: "Is drinking green tea the same as taking the extract?", a: "No — extracts deliver a much more concentrated dose of catechins than brewed tea, which is both why they show more measurable effects in trials and why the rare liver-related safety concerns are specific to concentrated extracts, not the beverage." },
-      { q: "Does it work without caffeine?", a: "Most of the positive fat-oxidation research used EGCG combined with caffeine; decaffeinated extract alone has less supporting evidence." }
+      { q: "Does it work without caffeine?", a: "Most of the positive fat-oxidation research used EGCG combined with caffeine; decaffeinated extract alone has less supporting evidence." },
+      { q: "Wait, is green tea extract FDA-approved or not?", a: "A specific green tea catechin extract is approved — but as Veregen, a topical ointment for genital warts, not an oral supplement for weight loss. Same plant, different product, different regulatory status." }
     ]
   },
   {
@@ -2014,13 +2088,17 @@ function showResults(){
     goal.protocols.forEach(p => {
       const el = document.createElement("div");
       el.className = "protocol";
-      const links = (p.glossaryIds || []).map(gid => {
-        const entry = ALL_ENTRIES.find(x => x.id === gid);
-        return entry ? `<button type="button" class="glossary-link" onclick="openGlossaryEntry('${gid}')">Full profile: ${entry.name} →</button>` : "";
-      }).join("");
+      const linkedEntries = (p.glossaryIds || []).map(gid => ALL_ENTRIES.find(x => x.id === gid)).filter(Boolean);
+      const hasFda = linkedEntries.some(e => e.fda);
+      const links = linkedEntries.map(entry =>
+        `<button type="button" class="glossary-link" onclick="openGlossaryEntry('${entry.id}')">Full profile: ${entry.name} →</button>`
+      ).join("");
       el.innerHTML = `
         <div class="protocol-head">
-          <div class="protocol-name">${p.name}</div>
+          <div class="protocol-name-row">
+            <div class="protocol-name">${p.name}</div>
+            ${hasFda ? `<span class="fda-badge" title="FDA-approved drug application exists for this — see its full profile in the glossary">✓</span>` : ""}
+          </div>
           <div class="protocol-badges">
             <span class="kind-badge">${p.kind === "supplement" ? "Supplement" : "Peptide"}</span>
             <span class="evidence ${p.evidence}">${p.evidenceLabel}</span>
@@ -2055,7 +2133,10 @@ function renderGlossaryItem(p){
     <div class="acc-item" id="acc-${p.id}" data-search="${(p.name + " " + p.tag).toLowerCase()}">
       <button type="button" class="acc-header" onclick="toggleAccordion('${p.id}')" aria-expanded="false">
         <span class="acc-header-main">
-          <span class="acc-name">${p.name}</span>
+          <span class="acc-name-row">
+            <span class="acc-name">${p.name}</span>
+            ${p.fda ? `<span class="fda-badge" title="FDA-approved drug application exists — see FDA approval status below">✓</span>` : ""}
+          </span>
           <span class="acc-tag">${p.tag}</span>
         </span>
         <span class="evidence ${p.evidence}">${p.evidenceLabel}</span>
@@ -2063,6 +2144,13 @@ function renderGlossaryItem(p){
       </button>
       <div class="acc-body-wrap">
         <div class="acc-body"><div class="acc-body-inner">
+          ${p.fda ? `
+          <div class="acc-section">
+            <div class="acc-section-title fda">FDA approval status <span class="fda-badge" title="Confirmed against the FDA's Drugs@FDA dataset">✓</span></div>
+            <p class="fda-detail"><strong>${p.fda.brand}</strong> — ${p.fda.applicationNumber}, sponsored by ${p.fda.sponsor}. Approved ${p.fda.approvalDate}. ${p.fda.status}.</p>
+            <p>${p.fda.note}</p>
+          </div>
+          ` : ""}
           <div class="acc-section">
             <div class="acc-section-title">What it is</div>
             <p>${p.whatItIs}</p>
